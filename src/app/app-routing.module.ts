@@ -1,12 +1,12 @@
 import { PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ShellComponent } from './components/shell/shell.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ShellComponent,
+    component: DashboardComponent,
     pathMatch: 'full',
     children: [],
   },
