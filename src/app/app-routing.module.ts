@@ -1,16 +1,31 @@
 import { PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    pathMatch: 'full',
-    children: [],
+    children: [
+      {
+        path: '',
+        component: PageNotFoundComponent
+      },
+      {
+        path: 'form-builder',
+        loadChildren: () =>
+          import('./pages/form-builder/form-builder.module').then(
+            (m) => m.FormBuilderModule
+          ),
+      },
+    ],
   },
-  // { path: '**', component:  }
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+  },
 ];
 
 @NgModule({

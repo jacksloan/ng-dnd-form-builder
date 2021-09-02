@@ -1,0 +1,42 @@
+<div class="flex flex-row p-4 gap-2">
+  <div class="container">
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="inputTypes"
+      [cdkDropListConnectedTo]="doneList"
+      class="list"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        [class.border-none]="isLast"
+        class="item"
+        *ngFor="let input of inputTypes; let isLast = last"
+        cdkDrag
+      >
+        {{ input }}
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="formInputs"
+      [cdkDropListConnectedTo]="todoList"
+      class="list"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        [class.border-none]="isLast"
+        class="item"
+        *ngFor="let item of formInputs; let isLast = last"
+        cdkDrag
+      >
+        {{ item }}
+      </div>
+      <div class="item border-4 border-dashed">Drop</div>
+    </div>
+  </div>
+</div>
