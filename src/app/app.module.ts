@@ -6,19 +6,22 @@ import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedMaterialModule } from './shared/shared-material.module';
+import { ShellComponent } from './components/shell/shell.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent, ShellComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    SharedMaterialModule,
     FormlyModule.forRoot({ extras: { lazyRender: true } }),
-    FormlyMaterialModule
+    FormlyMaterialModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
