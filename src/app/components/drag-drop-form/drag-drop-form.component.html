@@ -1,31 +1,41 @@
-<div class="flex flex-row p-4 gap-2">
-  <div class="container">
+<div
+  cdkDropListGroup
+  class="flex flex-row p-4 gap-2"
+  *ngIf="userMode === 'editing'"
+>
+  <div class="container drag-list hidden-placeholder">
     <div
-      cdkDropList
-      #todoList="cdkDropList"
-      [cdkDropListData]="inputTypes"
-      [cdkDropListConnectedTo]="doneList"
       class="list"
-      (cdkDropListDropped)="drop($event)"
+      cdkDropList
+      cdkDropListSortingDisabled
+      [cdkDropListData]="inputTypes"
+      [cdkDropListEnterPredicate]="noReturnPredicate"
+      (cdkDropListExited)="onSourceListExited($event)"
+      (cdkDropListEntered)="onSourceListEntered($event)"
+      [cdkDropListConnectedTo]="formInputList"
     >
       <div
         [class.border-none]="isLast"
         class="item"
-        *ngFor="let input of inputTypes; let isLast = last"
+        *ngFor="let input of inputTypes; let isLast = last; let index = index"
         cdkDrag
+        [cdkDragData]="input"
       >
-        {{ input }}
+        {{ input.dndName }}
       </div>
     </div>
   </div>
 
-  <div class="container">
+  <div
+    class="container dashed-placeholder"
+    [class.hidden-placeholder]="formInputs.length === 0"
+  >
     <div
       cdkDropList
-      #doneList="cdkDropList"
+      #formInputList="cdkDropList"
       [cdkDropListData]="formInputs"
-      [cdkDropListConnectedTo]="todoList"
-      class="list"
+      [class.list]="formInputs.length > 0"
+      [class.empty-drop-zone]="formInputs.length === 0"
       (cdkDropListDropped)="drop($event)"
     >
       <div
@@ -33,10 +43,23 @@
         class="item"
         *ngFor="let item of formInputs; let isLast = last"
         cdkDrag
+        [cdkDragData]="item"
       >
-        {{ item }}
+        {{ item?.templateOptions?.label }}
       </div>
-      <div class="item border-4 border-dashed">Drop</div>
+      <p *ngIf="formInputs.length === 0">Drop an input here</p>
     </div>
   </div>
 </div>
+
+<form
+  class="h-64 w-full"
+  [formGroup]="formPreview"
+  *ngIf="userMode === 'preview'"
+>
+  <formly-form
+    [form]="formPreview"
+    [model]="formPreviewModel"
+    [fields]="formPreviewFields"
+  ></formly-form>
+</form>

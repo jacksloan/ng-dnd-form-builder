@@ -26,7 +26,14 @@
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.cdk-drag-placeholder {
-  /* @apply border-indigo-400 border-4 border-dashed box-content */
+.dashed-placeholder .cdk-drag-placeholder {
+  @apply border-indigo-400 border-4 border-dashed box-content;
+}
+
+.hidden-placeholder .cdk-drag-placeholder {
   /* opacity: 0; */
+}
+
+.empty-drop-zone {
+  @apply border-indigo-400 border-4 border-dashed box-content bg-indigo-50 h-64 rounded-md;
 }
