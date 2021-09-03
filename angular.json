@@ -17,8 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ng-dnd-forms",
+            "outputPath": "docs",
             "index": "src/index.html",
+            "baseHref": "ng-dnd-form-builder",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
