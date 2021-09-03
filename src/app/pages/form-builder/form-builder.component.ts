@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
         </mat-icon>
       </button>
     </mat-toolbar>
-    <app-drag-drop-form [userMode]="this.userMode"></app-drag-drop-form>
+    <dnd-form [userMode]="this.userMode"></dnd-form>
   `,
 })
 export class FormBuilderComponent {
