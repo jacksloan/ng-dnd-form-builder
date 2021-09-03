@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { DnDFormConfig, DndFormInputs } from './model';
 
 @Component({
-  selector: 'dnd-copy-list-source',
+  selector: 'dnd-list-input-source',
   template: `
     <div class="container drag-list hidden-placeholder">
       <div
@@ -37,7 +37,7 @@ import { DnDFormConfig, DndFormInputs } from './model';
     '.cdk-drag-animating { transition: transform 300ms cubic-bezier(0, 0, 0.2, 1); }',
   ],
 })
-export class DndCopyListSourceComponent {
+export class DndListInputSourceComponent {
   public cleanupTemporaryFields() {
     this._inputTypes = this._inputTypes.filter((it) => !it.dndTemp);
   }

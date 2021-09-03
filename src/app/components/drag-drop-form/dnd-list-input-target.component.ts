@@ -4,7 +4,7 @@ import { DnDFormConfig } from './model';
 import { v4 as createId } from 'uuid';
 
 @Component({
-  selector: 'dnd-form-target-list',
+  selector: 'dnd-list-input-target',
   template: `
     <div
       class="container dashed-placeholder"
@@ -36,7 +36,7 @@ import { v4 as createId } from 'uuid';
     '.cdk-drag-animating { transition: transform 300ms cubic-bezier(0, 0, 0.2, 1); }',
   ],
 })
-export class DndFormTargetListComponent {
+export class DndListInputTargetComponent {
   @Input() formInputs: Array<DnDFormConfig> = [];
 
   @Output() inputDropped = new EventEmitter<CdkDragDrop<DnDFormConfig[]>>();
@@ -57,7 +57,7 @@ export class DndFormTargetListComponent {
         ...event.previousContainer.data[event.previousIndex],
       };
       event.container.data.splice(event.currentIndex, 0, item);
-      this.formlyFieldsChange.next(event.container.data);
+      this.formlyFieldsChange.next([...event.container.data]);
     }
   }
 }

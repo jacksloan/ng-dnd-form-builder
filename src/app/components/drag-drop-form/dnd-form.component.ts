@@ -4,8 +4,6 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DnDFormConfig } from './model';
 
 @Component({
@@ -14,19 +12,19 @@ import { DnDFormConfig } from './model';
     <section cdkDropListGroup *ngIf="userMode === 'editing'">
       <div>
         <h2 class="text-xl">Inputs</h2>
-        <dnd-copy-list-source
+        <dnd-list-input-source
           class="block mt-4"
           #inputCopySource
-        ></dnd-copy-list-source>
+        ></dnd-list-input-source>
       </div>
       <div>
         <h2 class="text-xl">Form</h2>
-        <dnd-form-target-list
+        <dnd-list-input-target
           class="block mt-4"
           [formInputs]="formTargetFields"
           (inputDropped)="inputCopySource.cleanupTemporaryFields()"
           (formlyFieldsChange)="setFormPreviewFields($event)"
-        ></dnd-form-target-list>
+        ></dnd-list-input-target>
       </div>
     </section>
 
@@ -48,26 +46,7 @@ import { DnDFormConfig } from './model';
 export class DndFormComponent {
   @Input() userMode: 'editing' | 'preview' = 'editing';
 
-  formTargetFields: DnDFormConfig[] = [
-    {
-      dndName: 'DatePicker',
-      dndTemp: false,
-      key: 'a',
-      type: 'datepicker',
-      templateOptions: {
-        label: 'a',
-      },
-    },
-    {
-      dndName: 'DatePicker',
-      dndTemp: false,
-      key: 'b',
-      type: 'datepicker',
-      templateOptions: {
-        label: 'b',
-      },
-    },
-  ];
+  formTargetFields: DnDFormConfig[] = [];
 
   formPreviewFields: DnDFormConfig[] = [];
 
