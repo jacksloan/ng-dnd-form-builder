@@ -10,12 +10,14 @@ export type DndInputType =
 
 export type DnDFormConfig = FormlyFieldConfig & {
   dndName: DndInputType;
+  dndIcon: string;
   dndTemp: boolean;
   fieldGroup?: DnDFormConfig[];
 };
 
 export const dndFormInputText: DnDFormConfig = {
   dndName: 'Text',
+  dndIcon: 'text_fields',
   dndTemp: false,
   type: 'input',
   templateOptions: {
@@ -28,6 +30,7 @@ export const dndFormInputText: DnDFormConfig = {
 export const dndFormInputNumber: DnDFormConfig = {
   dndName: 'Number',
   dndTemp: false,
+  dndIcon: 'numbers',
   type: 'input',
   templateOptions: {
     type: 'number',
@@ -39,6 +42,7 @@ export const dndFormInputNumber: DnDFormConfig = {
 export const dndFormInputDatepicker: DnDFormConfig = {
   dndName: 'DatePicker',
   dndTemp: false,
+  dndIcon: 'today',
   type: 'datepicker',
   templateOptions: {
     label: 'Date Picker Label',
@@ -49,6 +53,7 @@ export const dndFormInputDatepicker: DnDFormConfig = {
 export const dndFormInputRadio: DnDFormConfig = {
   dndName: 'Radio',
   dndTemp: false,
+  dndIcon: 'radio_button_checked',
   type: 'radio',
   templateOptions: {
     label: 'Radio Label',
@@ -58,6 +63,7 @@ export const dndFormInputRadio: DnDFormConfig = {
 
 export const dndFormInputGroup: DnDFormConfig = {
   dndName: 'Group',
+  dndIcon: 'list_alt',
   dndTemp: false,
   fieldGroup: [],
   templateOptions: {
@@ -67,6 +73,7 @@ export const dndFormInputGroup: DnDFormConfig = {
 
 export const dndFormInputCheckbox: DnDFormConfig = {
   dndName: 'Checkbox',
+  dndIcon: 'check_box',
   dndTemp: false,
   type: 'checkbox',
   templateOptions: {
@@ -76,10 +83,10 @@ export const dndFormInputCheckbox: DnDFormConfig = {
 };
 
 export const DndFormInputs: DnDFormConfig[] = [
+  dndFormInputText,
+  dndFormInputNumber,
   dndFormInputCheckbox,
+  dndFormInputRadio,
   dndFormInputDatepicker,
   dndFormInputGroup,
-  dndFormInputNumber,
-  dndFormInputRadio,
-  dndFormInputText,
 ];

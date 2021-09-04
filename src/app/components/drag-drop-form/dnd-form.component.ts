@@ -33,12 +33,9 @@ import { DnDFormConfig } from './model';
     </section>
   `,
   styles: [
-    'section { @apply flex flex-row p-4 gap-2 }',
-    '.container { @apply w-96 max-w-full align-top; }',
-    '.list { @apply border border-gray-300 rounded-md block overflow-hidden; }',
-    '.item { @apply py-5 px-3 border-b border-gray-300 cursor-move text-sm bg-white; }',
-    '.dashed-placeholder .cdk-drag-placeholder { @apply border-indigo-400 border-4 border-dashed box-content; }',
-    '.empty-drop-zone { @apply border-indigo-400 border-4 border-dashed box-content bg-indigo-50 h-64 rounded-md; }',
+    'dnd-form section { @apply flex flex-row p-4 gap-2 }',
+    'dnd-form .dashed-placeholder .cdk-drag-placeholder { @apply border-indigo-400 border-4 border-dashed box-content; }',
+    'dnd-form .empty-drop-zone { @apply border-indigo-400 border-4 border-dashed box-content bg-indigo-50 h-64 rounded-md; }',
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
