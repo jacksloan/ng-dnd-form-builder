@@ -1,33 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-builder',
   template: `
     <mat-toolbar class="flex flex-row justify-between">
       <span>Drag and Drop Form Builder</span>
-      <button mat-icon-button (click)="switchUserMode()">
-        <mat-icon [matTooltip]="userModeTooltip">
-          {{ userModeIcon }}
+      <button mat-icon-button (click)="togglePreview()">
+        <mat-icon [matTooltip]="(userModeTooltip$ | async) || ''">
+          {{ userModeIcon$ | async }}
         </mat-icon>
       </button>
     </mat-toolbar>
-    <dnd-form [userMode]="this.userMode"></dnd-form>
+    <dnd-form [userMode]="userMode$ | async"></dnd-form>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormBuilderComponent {
-  userMode: 'editing' | 'preview' = 'editing';
-  userModeIcon = this.userMode === 'editing' ? 'visibility' : 'visibility_off';
-  userModeTooltip = this.userMode === 'editing' ? 'Preview Form' : 'Edit Form';
-  switchUserMode() {
-    switch (this.userMode) {
-      case 'editing':
-        this.userMode = 'preview';
-        break;
-      case 'editing':
-        this.userMode = 'editing';
-        break;
-      default:
-        this.userMode = 'editing';
-    }
+  showPreview$ = new BehaviorSubject(true);
+
+  userMode$: Observable<'editing' | 'preview'> = this.showPreview$.pipe(
+    map((show) => {
+      if (show) return 'preview';
+      else return 'editing';
+    })
+  );
+  userModeIcon$ = this.showPreview$.pipe(
+    map((show) => (show ? 'visibility' : 'visibility_off'))
+  );
+
+  userModeTooltip$ = this.showPreview$.pipe(
+    map((show) => (show ? 'Hide Preview' : 'Show Preview'))
+  );
+
+  togglePreview() {
+    this.showPreview$.next(!this.showPreview$.value);
   }
 }

@@ -57,6 +57,7 @@ import { DnDFormConfig } from './model';
     </div>
   `,
   styles: [
+    ':host {display: block;}',
     '.cdk-drag-preview { @apply shadow-xl rounded-md; }',
     '.cdk-drop-list-dragging .cdk-drag { transition: transform 250ms cubic-bezier(0, 0, 0.2, 1); }',
     '.cdk-drag-animating { transition: transform 300ms cubic-bezier(0, 0, 0.2, 1); }',
@@ -86,7 +87,7 @@ export class DndListInputTargetComponent {
         ...event.previousContainer.data[event.previousIndex],
       };
       event.container.data.splice(event.currentIndex, 0, item);
-      this.formlyFieldsChange.next([...event.container.data]);
     }
+    this.formlyFieldsChange.next([...event.container.data]);
   }
 }

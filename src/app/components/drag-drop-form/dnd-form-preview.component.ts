@@ -22,6 +22,14 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
       Log Form
     </button>
   `,
+  styles: [
+    `
+      :host {
+        @apply block bg-white p-4 shadow-md rounded-md;
+        width: 36rem;
+      }
+    `,
+  ],
 })
 export class DndFormPreviewComponent implements OnChanges {
   @Input() fields: FormlyFieldConfig[] = [];

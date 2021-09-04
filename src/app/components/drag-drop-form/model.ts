@@ -77,6 +77,7 @@ export const dndFormInputCheckbox: DnDFormConfig = {
   dndIcon: 'check_box',
   dndTemp: false,
   type: 'checkbox',
+  defaultValue: false,
   templateOptions: {
     label: 'Checkbox Label',
     required: true,

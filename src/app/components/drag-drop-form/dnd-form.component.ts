@@ -9,27 +9,29 @@ import { DnDFormConfig } from './model';
 @Component({
   selector: 'dnd-form',
   template: `
-    <section cdkDropListGroup *ngIf="userMode === 'editing'">
+    <section cdkDropListGroup class="flex flex-row p-4 gap-2">
       <div>
         <h2 class="text-xl">Inputs</h2>
         <dnd-list-input-source
-          class="block mt-4"
+          class="mt-4"
           #inputCopySource
         ></dnd-list-input-source>
       </div>
       <div>
         <h2 class="text-xl">Form</h2>
         <dnd-list-input-target
-          class="block mt-4"
+          class="mt-4"
           [formInputs]="formTargetFields"
           (inputDropped)="inputCopySource.cleanupTemporaryFields()"
           (formlyFieldsChange)="setFormPreviewFields($event)"
         ></dnd-list-input-target>
       </div>
-    </section>
 
-    <section *ngIf="userMode === 'preview'">
-      <dnd-form-preview [fields]="formPreviewFields"> </dnd-form-preview>
+      <div *ngIf="userMode === 'preview'" class="pl-6">
+        <h2 class="text-xl">Preview</h2>
+        <dnd-form-preview class="mt-4" [fields]="formPreviewFields">
+        </dnd-form-preview>
+      </div>
     </section>
   `,
   styles: [
@@ -41,7 +43,7 @@ import { DnDFormConfig } from './model';
   encapsulation: ViewEncapsulation.None,
 })
 export class DndFormComponent {
-  @Input() userMode: 'editing' | 'preview' = 'editing';
+  @Input() userMode: 'editing' | 'preview' | null = 'preview';
 
   formTargetFields: DnDFormConfig[] = [];
 
