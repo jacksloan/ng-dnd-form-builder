@@ -2,7 +2,7 @@
 
 Drag and drop for quicksilver building ngx-formly forms
 
-[Demo](https://github.io/jacksloan/ng-dnd-form-builder)
+[Demo](https://jacksloan.github.io/ng-dnd-form-builder/form-builder)
 
 ## Development server
 
