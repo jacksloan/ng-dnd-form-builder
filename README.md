@@ -1,6 +1,8 @@
 # NgDndForms
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.2.
+Drag and drop for quicksilver building ngx-formly forms
+
+[Demo](https://github.io/jacksloan/ng-dnd-form-builder)
 
 ## Development server
 
