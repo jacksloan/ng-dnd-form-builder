@@ -1,9 +1,6 @@
-import { Component, OnInit, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-page-not-found',
@@ -17,9 +14,6 @@ export class PageNotFoundComponent {}
   imports: [
     CommonModule,
     RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
   ],
   exports: [PageNotFoundComponent],
 })

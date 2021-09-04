@@ -11,7 +11,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: PageNotFoundComponent
+        component: PageNotFoundComponent,
+        pathMatch: 'full',
       },
       {
         path: 'form-builder',
