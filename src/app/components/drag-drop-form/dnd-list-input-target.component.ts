@@ -2,12 +2,13 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectorRef,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   Inject,
   Input,
   Output,
   QueryList,
-  ViewChildren
+  ViewChildren,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
@@ -116,7 +117,7 @@ export class DndListInputTargetComponent {
   forcePreviewIconContainerHidden = false;
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
-    this.controlsByKey = JSON.parse('{}');
+    this.controlsByKey = {};
     this.controlsByKey[item.key + ''] = new FormControl();
     const control = this.controlsByKey[item.key + ''];
     control?.setValue(item.templateOptions?.label);
@@ -142,9 +143,9 @@ export class DndListInputTargetComponent {
 
     if (event.previousContainer === event.container) {
       moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
+        event.container.data, // current target container data before item dropped
+        event.previousIndex, // index of the item in the source container being dragged
+        event.currentIndex // desired index of item in the target container
       );
     } else {
       const item: DnDFormConfig = {
@@ -152,20 +153,22 @@ export class DndListInputTargetComponent {
         ...event.previousContainer.data[event.previousIndex],
       };
       event.container.data.splice(event.currentIndex, 0, item);
-      this.focusEditableInput(event.currentIndex);
+      this.focusAndSelectedEditableInputText(event.currentIndex);
     }
     this.formlyFieldsChange.next([...event.container.data]);
   }
 
-  focusEditableInput(currentIndex: number) {
+  focusAndSelectedEditableInputText(currentIndex: number) {
     this.cdr.detectChanges();
     const editable = this.editables?.get(currentIndex);
     if (editable) {
       editable.displayEditMode();
       this.cdr.detectChanges();
-      const id = this.formInputs[currentIndex].key as string;
-      const input = this.doc.getElementById(id);
+      const formKey = this.formInputs[currentIndex].key as string;
+      const input = this.doc.getElementById(formKey) as HTMLInputElement;
       input?.focus();
+      input?.select();
+      this.cdr.detectChanges();
     }
   }
 }
