@@ -2,6 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EditableModule } from '@ngneat/edit-in-place';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
@@ -21,6 +22,7 @@ const components = [
 @NgModule({
   imports: [
     CommonModule,
+    EditableModule,
     DragDropModule,
     ReactiveFormsModule,
     SharedMaterialModule,

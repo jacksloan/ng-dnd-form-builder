@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~12.1.2",
     "@angular/platform-browser-dynamic": "~12.1.2",
     "@angular/router": "~12.1.2",
+    "@ngneat/edit-in-place": "^1.5.0",
     "@ngneat/scam": "^2.1.0",
     "@ngneat/tailwind": "^7.0.3",
     "@ngx-formly/core": "^5.0.0",
