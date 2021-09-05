@@ -47,7 +47,7 @@ export class DndListInputSourceComponent implements OnInit {
   get viewMode(): DndSourceListViewMode {
     return this._viewMode;
   }
-  private _viewMode: DndSourceListViewMode = 'full';
+  private _viewMode: DndSourceListViewMode = 'compact';
   @Input() set viewMode(m: DndSourceListViewMode) {
     this._viewMode = m;
     this.setupViewModeMatchers();
