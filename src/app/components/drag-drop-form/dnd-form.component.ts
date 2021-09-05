@@ -24,7 +24,16 @@ import { DnDFormConfig } from './model';
           [formInputs]="formTargetFields"
           (inputDropped)="inputCopySource.cleanupTemporaryFields()"
           (formlyFieldsChange)="setFormPreviewFields($event)"
-        ></dnd-list-input-target>
+        >
+          <ng-template let-item>
+            <dnd-container
+              class="border-2 border-blue-500"
+              [class.border-red-500]="item.isHovered"
+            >
+              Hello World
+            </dnd-container>
+          </ng-template>
+        </dnd-list-input-target>
       </div>
 
       <div *ngIf="userMode === 'preview'" class="pl-6">

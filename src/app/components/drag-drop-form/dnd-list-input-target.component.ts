@@ -3,11 +3,13 @@ import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  ContentChild,
   EventEmitter,
   Inject,
   Input,
   Output,
   QueryList,
+  TemplateRef,
   ViewChildren,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -19,67 +21,73 @@ import { DnDFormConfig } from './model';
   selector: 'dnd-list-input-target',
   template: `
     <div
-      class="w-96 max-w-full align-top dashed-placeholder"
       [class.hidden-placeholder]="formInputs.length === 0"
+      class="flex flex-col gap-4 rounded-md w-96 max-w-full align-top dashed-placeholder"
+      cdkDropList
+      [cdkDropListData]="formInputs"
+      [class.list]="formInputs.length > 0"
+      [class.empty-drop-zone]="formInputs.length === 0"
+      (cdkDropListEntered)="forcePreviewIconContainerHidden = true"
+      (cdkDropListExited)="forcePreviewIconContainerHidden = false"
+      (cdkDropListDropped)="drop($event)"
     >
       <div
-        class="flex flex-col gap-4 rounded-md"
-        cdkDropList
-        [cdkDropListData]="formInputs"
-        [class.list]="formInputs.length > 0"
-        [class.empty-drop-zone]="formInputs.length === 0"
-        (cdkDropListEntered)="forcePreviewIconContainerHidden = true"
-        (cdkDropListExited)="forcePreviewIconContainerHidden = false"
-        (cdkDropListDropped)="drop($event)"
+        (mouseenter)="mouserOverItemIndex = index"
+        (mouseleave)="mouserOverItemIndex = -1"
+        [cdkDragData]="item"
+        cdkDrag
+        *ngFor="let item of formInputs; let isLast = last; let index = index"
       >
-        <div
-          class="shadow-md bg-white p-4 rounded-md flex flex-row gap-3 relative"
-          (mouseenter)="mouserOverItemIndex = index"
-          (mouseleave)="mouserOverItemIndex = -1"
-          [cdkDragData]="item"
-          cdkDrag
-          *ngFor="let item of formInputs; let isLast = last; let index = index"
+        <ng-template
+          [ngTemplateOutlet]="templateRef"
+          [ngTemplateOutletContext]="{
+              $implicit: {
+                item, 
+                isHovered: mouserOverItemIndex === index
+              }
+            }"
         >
-          <div
-            class="absolute left-0 h-full cursor-move"
-            cdkDragHandle
-            *ngIf="mouserOverItemIndex === index"
-          >
-            <mat-icon class="scale-110">drag_indicator</mat-icon>
-          </div>
-
-          <mat-icon class="ml-3">{{ item.dndIcon }}</mat-icon>
-
-          <editable
-            #editables
-            (modeChange)="editableModeChange($event, item)"
-            (save)="editableUpdate(index, item)"
-          >
-            <ng-template viewMode>{{
-              item?.templateOptions?.label || 'Unknown'
-            }}</ng-template>
-
-            <ng-template editMode>
-              <input
-                editableOnEnter
-                (focusout)="editables.cancelEdit()"
-                [id]="item.key"
-                [formControl]="controlsByKey[item.key + '']"
-              />
-            </ng-template>
-          </editable>
+          <ng-content select="dnd-container"></ng-content>
+        </ng-template>
+        <div
+          class="absolute left-0 h-full cursor-move"
+          cdkDragHandle
+          *ngIf="mouserOverItemIndex === index"
+        >
+          <mat-icon class="scale-110">drag_indicator</mat-icon>
         </div>
 
-        <!-- TODO apply transform scale animation when icon container disappears? -->
-        <div
-          *ngIf="!forcePreviewIconContainerHidden && formInputs.length < 1"
-          class="w-full h-full flex flex-row items-center justify-center"
-          matTooltip="Drag & drop and item here to get started"
+        <mat-icon class="ml-3">{{ item.dndIcon }}</mat-icon>
+
+        <editable
+          #editables
+          (modeChange)="editableModeChange($event, item)"
+          (save)="editableUpdate(index, item)"
         >
-          <mat-icon class="text-indigo-200" style="transform: scale(3);"
-            >add</mat-icon
-          >
-        </div>
+          <ng-template viewMode>{{
+            item?.templateOptions?.label || 'Unknown'
+          }}</ng-template>
+
+          <ng-template editMode>
+            <input
+              editableOnEnter
+              (focusout)="editables.cancelEdit()"
+              [id]="item.key"
+              [formControl]="controlsByKey[item.key + '']"
+            />
+          </ng-template>
+        </editable>
+      </div>
+
+      <!-- TODO apply transform scale animation when icon container disappears? -->
+      <div
+        *ngIf="!forcePreviewIconContainerHidden && formInputs.length < 1"
+        class="w-full h-full flex flex-row items-center justify-center"
+        matTooltip="Drag & drop and item here to get started"
+      >
+        <mat-icon class="text-indigo-200" style="transform: scale(3);"
+          >add</mat-icon
+        >
       </div>
     </div>
   `,
@@ -92,6 +100,7 @@ import { DnDFormConfig } from './model';
 })
 export class DndListInputTargetComponent {
   @ViewChildren('editables') editables?: QueryList<EditableComponent>;
+  @ContentChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   private _formInputs: Array<DnDFormConfig> = [];
 
