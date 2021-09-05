@@ -90,5 +90,5 @@ export const DndFormInputs: DnDFormConfig[] = [
   dndFormInputCheckbox,
   dndFormInputRadio,
   dndFormInputDatepicker,
-  dndFormInputGroup,
+  // dndFormInputGroup,
 ];
