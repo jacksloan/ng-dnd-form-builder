@@ -66,7 +66,6 @@ import { DnDFormConfig } from './model';
   `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
 })
 export class DndFormComponent {
   @Input() userMode: 'editing' | 'preview' | null = 'preview';
