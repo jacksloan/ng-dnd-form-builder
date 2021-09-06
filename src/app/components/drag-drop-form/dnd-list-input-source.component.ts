@@ -36,12 +36,7 @@ type DndSourceListViewMode = 'compact' | 'medium' | 'full';
       </div>
     </div>
   `,
-  styles: [
-    ':host {display: block;}',
-    '.cdk-drag-preview { @apply shadow-xl rounded-md; }',
-    '.cdk-drop-list-dragging .cdk-drag { transition: transform 250ms cubic-bezier(0, 0, 0.2, 1); }',
-    '.cdk-drag-animating { transition: transform 300ms cubic-bezier(0, 0, 0.2, 1); }',
-  ],
+  styles: [':host {display: block;}'],
 })
 export class DndListInputSourceComponent implements OnInit {
   get viewMode(): DndSourceListViewMode {

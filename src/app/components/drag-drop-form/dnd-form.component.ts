@@ -22,7 +22,7 @@ import { DnDFormConfig } from './model';
         <h2 class="text-xl">Form</h2>
 
         <dnd-list-input-target
-          listContainerClass="flex flex-col gap-4 w-96 mt-4"
+          listContainerClass="flex flex-col gap-4 w-96 mt-4 dashed-cdk-drag-placeholder"
           itemContainerClass="flex flex-row gap-1 bg-white shadow-md p-3 rounded-md items-center"
           (inputDropped)="inputCopySource.cleanupTemporaryFields()"
           (formlyFieldsChange)="formPreviewFields.next($event)"
@@ -35,6 +35,7 @@ import { DnDFormConfig } from './model';
 
           <!-- use itemContainerClass input of parent to control item layout -->
           <ng-template #item let-it>
+            <!-- TODO make items editable -->
             <mat-icon>{{ it.item.dndIcon }}</mat-icon>
             <span>
               {{ it.item.templateOptions.label }}
