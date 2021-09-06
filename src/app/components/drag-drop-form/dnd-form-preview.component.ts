@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { DnDFormConfig } from './model';
 
 @Component({
   selector: 'dnd-form-preview',
@@ -31,19 +32,11 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
     `,
   ],
 })
-export class DndFormPreviewComponent implements OnChanges {
+export class DndFormPreviewComponent {
   @Input() fields: FormlyFieldConfig[] = [];
   options: FormlyFormOptions = {};
   form = new FormGroup({});
   model = {};
-
-  ngOnChanges(c: SimpleChanges) {
-    if (c.fields) {
-      // huge wtf - if we don't stringify & parse
-      // multiple datepickers only change the last datepicker in the list without this?
-      this.fields = JSON.parse(JSON.stringify(c.fields.currentValue));
-    }
-  }
 
   logFormFields() {
     console.log({

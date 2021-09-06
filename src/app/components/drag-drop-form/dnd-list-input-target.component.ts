@@ -1,20 +1,13 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DOCUMENT } from '@angular/common';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
-  ChangeDetectorRef,
   Component,
   ContentChild,
   EventEmitter,
-  Inject,
   Input,
   Output,
-  QueryList,
   TemplateRef,
-  ViewChildren,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
-import { v4 as createId } from 'uuid';
+import { DndFormService } from './dnd-form.service';
 import { DnDFormConfig } from './model';
 
 @Component({
@@ -22,20 +15,24 @@ import { DnDFormConfig } from './model';
   template: `
     <div
       [class]="listContainerClass"
-      [class.hidden-placeholder]="formInputs.length === 0"
+      [class.hidden-placeholder]="service.dropInputs.length === 0"
       cdkDropList
-      [cdkDropListData]="formInputs"
-      [class.list]="formInputs.length > 0"
+      [cdkDropListData]="service.dropInputs"
+      [class.list]="service.dropInputs.length > 0"
       (cdkDropListEntered)="forcePreviewIconContainerHidden = true"
       (cdkDropListExited)="forcePreviewIconContainerHidden = false"
       (cdkDropListDropped)="drop($event)"
     >
       <div
         cdkDrag
+        *ngFor="
+          let item of service.dropInputs;
+          let isLast = last;
+          let index = index
+        "
         (mouseenter)="mouserOverItemIndex = index"
         (mouseleave)="mouserOverItemIndex = -1"
         [cdkDragData]="item"
-        *ngFor="let item of formInputs; let isLast = last; let index = index"
         [class]="itemContainerClass"
       >
         <!-- 
@@ -66,7 +63,9 @@ import { DnDFormConfig } from './model';
 
       <!-- TODO apply transform scale animation when icon container disappears? -->
       <ng-container
-        *ngIf="!forcePreviewIconContainerHidden && formInputs.length < 1"
+        *ngIf="
+          !forcePreviewIconContainerHidden && service.dropInputs.length < 1
+        "
       >
         <ng-template [ngTemplateOutlet]="placeholderRef || null"></ng-template>
       </ng-container>
@@ -77,7 +76,7 @@ import { DnDFormConfig } from './model';
   styles: [':host {display: block;}'],
 })
 export class DndListInputTargetComponent {
-  @ViewChildren('editables') editables?: QueryList<EditableComponent>;
+  constructor(public service: DndFormService) {}
 
   @ContentChild('item') itemRef?: TemplateRef<any>;
   @ContentChild('placeholder') placeholderRef?: TemplateRef<any>;
@@ -86,82 +85,13 @@ export class DndListInputTargetComponent {
   @Input() listContainerClass: string = '';
   @Input() itemContainerClass: string = '';
 
-  private _formInputs: Array<DnDFormConfig> = [];
+  @Output() inputAdded = new EventEmitter<DnDFormConfig>();
 
-  @Input() set formInputs(c: Array<DnDFormConfig>) {
-    this._formInputs = c;
-    this.formlyFieldsChange.next(this._formInputs);
-  }
-
-  get formInputs(): Array<DnDFormConfig> {
-    return this._formInputs;
-  }
-
-  @Output() inputDropped = new EventEmitter<CdkDragDrop<DnDFormConfig[]>>();
-  @Output() formlyFieldsChange = new EventEmitter<DnDFormConfig[]>();
-
-  constructor(
-    @Inject(DOCUMENT) private doc: Document,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  controlsByKey: { [k: string]: FormControl } = {};
   mouserOverItemIndex = -1;
   forcePreviewIconContainerHidden = false;
 
-  editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
-    this.controlsByKey = {};
-    this.controlsByKey[item.key + ''] = new FormControl();
-    const control = this.controlsByKey[item.key + ''];
-    control?.setValue(item.templateOptions?.label);
-  }
-
-  editableUpdate(indexForUpdate: number, item: DnDFormConfig) {
-    const newValue = this.controlsByKey[item.key + '']?.value || 'unknown';
-    this.formInputs = this.formInputs.map((item, index) => {
-      if (index === indexForUpdate) {
-        return {
-          ...item,
-          templateOptions: { ...item.templateOptions, label: newValue },
-        };
-      } else {
-        return item;
-      }
-    });
-  }
-
   drop(event: CdkDragDrop<DnDFormConfig[]>): void {
-    // rebroadcast drop event to consumers of this component
-    this.inputDropped.next(event);
-
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data, // current target container data before item dropped
-        event.previousIndex, // index of the item in the source container being dragged
-        event.currentIndex // desired index of item in the target container
-      );
-    } else {
-      const item: DnDFormConfig = {
-        key: createId().replace('-', ''),
-        ...event.previousContainer.data[event.previousIndex],
-      };
-      event.container.data.splice(event.currentIndex, 0, item);
-      this.focusAndSelectedEditableInputText(event.currentIndex);
-    }
-    this.formlyFieldsChange.next([...event.container.data]);
-  }
-
-  focusAndSelectedEditableInputText(currentIndex: number) {
-    this.cdr.detectChanges();
-    const editable = this.editables?.get(currentIndex);
-    if (editable) {
-      editable.displayEditMode();
-      this.cdr.detectChanges();
-      const formKey = this.formInputs[currentIndex].key as string;
-      const input = this.doc.getElementById(formKey) as HTMLInputElement;
-      input?.focus();
-      input?.select();
-      this.cdr.detectChanges();
-    }
+    const item = this.service.handleDropEvent(event);
+    this.inputAdded.next(item);
   }
 }
