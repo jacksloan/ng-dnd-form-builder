@@ -1,5 +1,5 @@
 import { CdkDragExit } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { DndFormService } from './dnd-form.service';
 
 @Component({
@@ -8,15 +8,14 @@ import { DndFormService } from './dnd-form.service';
     <div
       cdkDropList
       cdkDropListSortingDisabled
-      class="flex flex-col gap-4 px-3"
+      [class]="listContainerClass"
       [cdkDropListData]="service.copyFromInputs"
       [cdkDropListEnterPredicate]="alwaysPreventDropPredicate"
       (cdkDropListExited)="addTemporaryInput($event)"
       (cdkDropListEntered)="cleanupTmeporaryInputs()"
     >
       <div
-        class="flex flex-row items-center justify-start gap-5 p-4 shadow-md bg-white rounded-md cursor-move"
-        [class.px-6]="!iconOnly"
+        [class]="itemContainerClass"
         [cdkDragData]="input"
         cdkDrag
         *ngFor="
@@ -25,21 +24,29 @@ import { DndFormService } from './dnd-form.service';
           let index = index
         "
       >
-        <mat-icon [matTooltip]="input.dndName" class="scale-150 block">{{
-          input.dndIcon
-        }}</mat-icon>
-        <span class="w-40" *ngIf="!iconOnly">
-          {{ input.dndName }}
-        </span>
+        <ng-template
+          [ngTemplateOutlet]="itemRef || null"
+          [ngTemplateOutletContext]="{
+                $implicit: {
+                  input, 
+                  index,
+                  isLast
+                }
+              }"
+        >
+        </ng-template>
       </div>
     </div>
   `,
   styles: [':host {display: block;}'],
 })
 export class DndListInputSourceComponent {
-  constructor(public service: DndFormService) {}
+  @Input() listContainerClass: string = '';
+  @Input() itemContainerClass: string = '';
 
-  iconOnly = true;
+  @ContentChild('input') itemRef!: TemplateRef<any>;
+
+  constructor(public service: DndFormService) {}
 
   cleanupTmeporaryInputs() {
     this.service.cleanupTemporaryInputTypes();

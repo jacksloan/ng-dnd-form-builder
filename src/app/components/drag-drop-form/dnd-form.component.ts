@@ -18,7 +18,19 @@ import { DnDFormConfig } from './model';
   providers: [DndFormService],
   template: `
     <section cdkDropListGroup class="flex flex-row p-4 gap-2">
-      <dnd-list-input-source> </dnd-list-input-source>
+      <dnd-list-input-source
+        listContainerClass="flex flex-col gap-4 px-3"
+        itemContainerClass="flex flex-row items-center justify-start gap-5 p-4 shadow-md bg-white rounded-md cursor-move"
+      >
+        <ng-template #input let-it>
+          <mat-icon [matTooltip]="it.input.dndName" class="scale-150 block">
+            {{ it.input.dndIcon }}
+          </mat-icon>
+          <span class="w-40" *ngIf="!iconOnly">
+            {{ it.input.dndName }}
+          </span>
+        </ng-template>
+      </dnd-list-input-source>
 
       <dnd-list-input-target
         listContainerClass="flex flex-col gap-4 w-96 dashed-cdk-drag-placeholder"
@@ -92,8 +104,8 @@ export class DndFormComponent {
   @ViewChildren('editable') editable?: QueryList<EditableComponent>;
 
   fields$ = this.service.fields$;
-
   controlsByKey: { [k: string]: FormControl } = {};
+  iconOnly = true;
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
     this.controlsByKey = {};

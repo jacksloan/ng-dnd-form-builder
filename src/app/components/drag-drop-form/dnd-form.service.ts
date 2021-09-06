@@ -16,6 +16,7 @@ export class DndFormService {
     event: CdkDragDrop<DnDFormConfig[]>
   ): DnDFormConfig | undefined {
     this.cleanupTemporaryInputTypes();
+    const { data } = event.item;
     try {
       if (event.previousContainer === event.container) {
         moveItemInArray(
@@ -23,12 +24,10 @@ export class DndFormService {
           event.previousIndex, // index of the item in the source container being dragged
           event.currentIndex // desired index of item in the target container
         );
-        return;
+        return data;
       } else {
-        const item: DnDFormConfig = {
-          key: createId().replace('-', ''),
-          ...event.previousContainer.data[event.previousIndex],
-        };
+        const key = createId().replace('-', '');
+        const item: DnDFormConfig = { key, ...data };
         event.container.data.splice(event.currentIndex, 0, item);
         return item;
       }
