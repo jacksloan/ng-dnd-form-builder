@@ -7,14 +7,12 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { SharedMaterialModule } from 'src/app/shared/shared-material.module';
-import { DndContainerComponent } from './dnd-container.component';
 import { DndFormPreviewComponent } from './dnd-form-preview.component';
 import { DndFormComponent } from './dnd-form.component';
 import { DndListInputSourceComponent } from './dnd-list-input-source.component';
 import { DndListInputTargetComponent } from './dnd-list-input-target.component';
 
 const components = [
-  DndContainerComponent,
   DndListInputSourceComponent,
   DndListInputTargetComponent,
   DndFormPreviewComponent,

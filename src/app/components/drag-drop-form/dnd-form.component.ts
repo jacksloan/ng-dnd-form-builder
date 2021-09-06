@@ -4,6 +4,7 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { DnDFormConfig } from './model';
 
 @Component({
@@ -19,46 +20,55 @@ import { DnDFormConfig } from './model';
       </div>
       <div>
         <h2 class="text-xl">Form</h2>
+
         <dnd-list-input-target
-          class="mt-4"
-          [formInputs]="formTargetFields"
+          listContainerClass="flex flex-col gap-4 w-96 mt-4"
+          itemContainerClass="flex flex-row gap-1 bg-white shadow-md p-3 rounded-md items-center"
           (inputDropped)="inputCopySource.cleanupTemporaryFields()"
-          (formlyFieldsChange)="setFormPreviewFields($event)"
+          (formlyFieldsChange)="formPreviewFields.next($event)"
         >
-          <ng-template let-item>
-            <dnd-container
-              class="border-2 border-blue-500"
-              [class.border-red-500]="item.isHovered"
+          <ng-template #dragHandle>
+            <div class="w-8 h-8 flex items-center">
+              <mat-icon class="cursor-move">drag_indicator</mat-icon>
+            </div>
+          </ng-template>
+
+          <!-- use itemContainerClass input of parent to control item layout -->
+          <ng-template #item let-it>
+            <mat-icon>{{ it.item.dndIcon }}</mat-icon>
+            <span>
+              {{ it.item.templateOptions.label }}
+            </span>
+          </ng-template>
+
+          <ng-template #placeholder>
+            <div
+              class="w-full h-64 flex flex-row items-center justify-center border-indigo-400 border-4 border-dashed box-content bg-indigo-50 rounded-md"
             >
-              Hello World
-            </dnd-container>
+              <mat-icon class="text-indigo-200" style="transform: scale(3);">
+                add
+              </mat-icon>
+            </div>
           </ng-template>
         </dnd-list-input-target>
       </div>
 
       <div *ngIf="userMode === 'preview'" class="pl-6">
         <h2 class="text-xl">Preview</h2>
-        <dnd-form-preview class="mt-4" [fields]="formPreviewFields">
+        <dnd-form-preview
+          class="mt-4"
+          [fields]="(formPreviewFields | async) || []"
+        >
         </dnd-form-preview>
       </div>
     </section>
   `,
-  styles: [
-    'dnd-form section { @apply flex flex-row p-4 gap-2 }',
-    'dnd-form .dashed-placeholder .cdk-drag-placeholder { @apply border-indigo-400 border-4 border-dashed box-content; }',
-    'dnd-form .empty-drop-zone { @apply border-indigo-400 border-4 border-dashed box-content bg-indigo-50 h-64 rounded-md; }',
-  ],
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class DndFormComponent {
   @Input() userMode: 'editing' | 'preview' | null = 'preview';
 
-  formTargetFields: DnDFormConfig[] = [];
-
-  formPreviewFields: DnDFormConfig[] = [];
-
-  setFormPreviewFields($event: DnDFormConfig[]) {
-    this.formPreviewFields = $event;
-  }
+  formPreviewFields = new BehaviorSubject<DnDFormConfig[]>([]);
 }

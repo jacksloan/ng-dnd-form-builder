@@ -21,86 +21,70 @@ import { DnDFormConfig } from './model';
   selector: 'dnd-list-input-target',
   template: `
     <div
+      [class]="listContainerClass"
       [class.hidden-placeholder]="formInputs.length === 0"
-      class="flex flex-col gap-4 rounded-md w-96 max-w-full align-top dashed-placeholder"
       cdkDropList
       [cdkDropListData]="formInputs"
       [class.list]="formInputs.length > 0"
-      [class.empty-drop-zone]="formInputs.length === 0"
       (cdkDropListEntered)="forcePreviewIconContainerHidden = true"
       (cdkDropListExited)="forcePreviewIconContainerHidden = false"
       (cdkDropListDropped)="drop($event)"
     >
       <div
+        cdkDrag
         (mouseenter)="mouserOverItemIndex = index"
         (mouseleave)="mouserOverItemIndex = -1"
         [cdkDragData]="item"
-        cdkDrag
         *ngFor="let item of formInputs; let isLast = last; let index = index"
+        [class]="itemContainerClass"
       >
+        <!-- 
+          cdkDragHandle must be a direct descendant of the cdkDrag item.
+          E.g. we can't do this:
+            <ng-template let-it #item>
+              <mat-icon cdkDragHandle>drag_indicator</mat-icon> // won't work!
+              <mat-icon>{{ it.item.dndIcon }}</mat-icon>
+              <span>
+                {{ it.item.templateOptions.label }}
+              </span>
+            </ng-template>
+        -->
+        <span cdkDragHandle *ngIf="dragHandleRef">
+          <ng-container [ngTemplateOutlet]="dragHandleRef"></ng-container>
+        </span>
         <ng-template
-          [ngTemplateOutlet]="templateRef"
+          [ngTemplateOutlet]="itemRef || null"
           [ngTemplateOutletContext]="{
-              $implicit: {
-                item, 
-                isHovered: mouserOverItemIndex === index
-              }
-            }"
+                $implicit: {
+                  item, 
+                  isHovered: mouserOverItemIndex === index
+                }
+              }"
         >
-          <ng-content select="dnd-container"></ng-content>
         </ng-template>
-        <div
-          class="absolute left-0 h-full cursor-move"
-          cdkDragHandle
-          *ngIf="mouserOverItemIndex === index"
-        >
-          <mat-icon class="scale-110">drag_indicator</mat-icon>
-        </div>
-
-        <mat-icon class="ml-3">{{ item.dndIcon }}</mat-icon>
-
-        <editable
-          #editables
-          (modeChange)="editableModeChange($event, item)"
-          (save)="editableUpdate(index, item)"
-        >
-          <ng-template viewMode>{{
-            item?.templateOptions?.label || 'Unknown'
-          }}</ng-template>
-
-          <ng-template editMode>
-            <input
-              editableOnEnter
-              (focusout)="editables.cancelEdit()"
-              [id]="item.key"
-              [formControl]="controlsByKey[item.key + '']"
-            />
-          </ng-template>
-        </editable>
       </div>
 
       <!-- TODO apply transform scale animation when icon container disappears? -->
-      <div
+      <ng-container
         *ngIf="!forcePreviewIconContainerHidden && formInputs.length < 1"
-        class="w-full h-full flex flex-row items-center justify-center"
-        matTooltip="Drag & drop and item here to get started"
       >
-        <mat-icon class="text-indigo-200" style="transform: scale(3);"
-          >add</mat-icon
-        >
-      </div>
+        <ng-template [ngTemplateOutlet]="placeholderRef || null"></ng-template>
+      </ng-container>
     </div>
+
+    <ng-template #body> </ng-template>
   `,
-  styles: [
-    ':host {display: block;}',
-    '.cdk-drag-preview { @apply shadow-xl rounded-md; }',
-    '.cdk-drop-list-dragging .cdk-drag { transition: transform 250ms cubic-bezier(0, 0, 0.2, 1); }',
-    '.cdk-drag-animating { transition: transform 300ms cubic-bezier(0, 0, 0.2, 1); }',
-  ],
+  styles: [':host {display: block;}'],
 })
 export class DndListInputTargetComponent {
   @ViewChildren('editables') editables?: QueryList<EditableComponent>;
-  @ContentChild(TemplateRef) templateRef!: TemplateRef<any>;
+
+  @ContentChild('item') itemRef?: TemplateRef<any>;
+  @ContentChild('placeholder') placeholderRef?: TemplateRef<any>;
+  @ContentChild('dragHandle') dragHandleRef?: TemplateRef<any>;
+
+  @Input() listContainerClass: string = '';
+  @Input() itemContainerClass: string = '';
 
   private _formInputs: Array<DnDFormConfig> = [];
 
