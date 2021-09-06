@@ -9,7 +9,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 export class DndFormService {
   copyFromInputs: DnDFormConfig[] = [...DndFormInputs];
   dropInputs: DnDFormConfig[] = [];
-  private _fields$ = new BehaviorSubject<FormlyFieldConfig[]>([]);
+  private _fields$ = new BehaviorSubject<DnDFormConfig[]>([]);
   fields$ = this._fields$.asObservable();
 
   handleDropEvent(
@@ -36,8 +36,13 @@ export class DndFormService {
     }
   }
 
-  setFields(config: FormlyFieldConfig[] = this.dropInputs) {
+  setFields(config: DnDFormConfig[] = this.dropInputs) {
     this._fields$.next(JSON.parse(JSON.stringify(config)));
+  }
+
+  addItem(config: DnDFormConfig) {
+    this.dropInputs = this.dropInputs.concat(config);
+    this.setFields();
   }
 
   updateFormLabel(config: DnDFormConfig, label: string) {

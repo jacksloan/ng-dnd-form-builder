@@ -23,12 +23,20 @@ import { DnDFormConfig } from './model';
         itemContainerClass="flex flex-row items-center justify-start gap-5 p-4 shadow-md bg-white rounded-md cursor-move"
       >
         <ng-template #input let-it>
-          <mat-icon [matTooltip]="it.input.dndName" class="scale-150 block">
-            {{ it.input.dndIcon }}
-          </mat-icon>
-          <span class="w-40" *ngIf="!iconOnly">
-            {{ it.input.dndName }}
-          </span>
+          <div
+            class="flex items-center justify-center"
+            [class.justify-start]="!iconOnly"
+            [class.px-3]="!iconOnly"
+            [class.gap-3]="!iconOnly"
+            (dblclick)="addItem(it.input)"
+          >
+            <mat-icon [matTooltip]="iconOnly ? it.input.dndName : ''" class="scale-150 block">
+              {{ it.input.dndIcon }}
+            </mat-icon>
+            <span class="w-32" *ngIf="!iconOnly">
+              {{ it.input.dndName }}
+            </span>
+          </div>
         </ng-template>
       </dnd-list-input-source>
 
@@ -107,7 +115,7 @@ export class DndFormComponent {
 
   fields$ = this.service.fields$;
   controlsByKey: { [k: string]: FormControl } = {};
-  iconOnly = true;
+  iconOnly = false;
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
     this.controlsByKey = {};
@@ -121,6 +129,10 @@ export class DndFormComponent {
 
   editableUpdate(item: DnDFormConfig, newLabel: string) {
     this.service.updateFormLabel(item, (newLabel || '').trim());
+  }
+
+  addItem(item: DnDFormConfig) {
+    this.service.addItem(item);
   }
 
   focusAndSelectedEditableInputText(c: DnDFormConfig) {
