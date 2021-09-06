@@ -1,6 +1,6 @@
 # NgDndForms
 
-Drag and drop for quicksilver building ngx-formly forms
+Drag and drop for quickly building ngx-formly forms
 
 [Demo](https://jacksloan.github.io/ng-dnd-form-builder)
 
