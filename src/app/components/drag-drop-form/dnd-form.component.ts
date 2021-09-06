@@ -48,6 +48,7 @@ import { DnDFormConfig } from './model';
           <mat-icon>{{ it.item?.dndIcon }}</mat-icon>
 
           <editable
+            class="w-full"
             [id]="[it.item.key] + '-editable'"
             #editable
             (modeChange)="editableModeChange($event, it.item)"
@@ -61,8 +62,9 @@ import { DnDFormConfig } from './model';
 
             <ng-template editMode>
               <input
+                class="w-full form-input h-8 rounded-sm"
                 editableOnEnter
-                (focusout)="editable.cancelEdit()"
+                (focusout)="editable.saveEdit()"
                 [id]="it.item.key"
                 [formControl]="controlsByKey[it.item.key + '']"
               />
@@ -118,7 +120,7 @@ export class DndFormComponent {
   }
 
   editableUpdate(item: DnDFormConfig, newLabel: string) {
-    this.service.updateFormLabel(item, newLabel);
+    this.service.updateFormLabel(item, (newLabel || '').trim());
   }
 
   focusAndSelectedEditableInputText(c: DnDFormConfig) {
