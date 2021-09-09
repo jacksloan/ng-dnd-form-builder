@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
         </mat-icon>
       </button>
     </mat-toolbar>
-    <dnd-form [userMode]="userMode$ | async"></dnd-form>
+    <app-material-example></app-material-example>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

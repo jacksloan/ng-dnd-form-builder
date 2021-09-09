@@ -1,4 +1,4 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDropListGroup, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -31,6 +31,6 @@ const components = [
     FormlyMatDatepickerModule,
   ],
   declarations: components,
-  exports: components,
+  exports: [components, CdkDropListGroup],
 })
 export class DragDropFormModule {}

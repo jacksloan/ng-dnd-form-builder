@@ -1,0 +1,94 @@
+<dnd-form #api cdkDropListGroup class="flex flex-row p-4 gap-2">
+  <dnd-list-input-source
+    listContainerClass="flex flex-col gap-4 px-3"
+    itemContainerClass="flex flex-row items-center justify-start gap-5 p-4 shadow-md bg-white rounded-md cursor-move"
+  >
+    <ng-template #input let-it>
+      <div
+        class="flex items-center justify-center"
+        [class.justify-start]="!iconOnly"
+        [class.px-3]="!iconOnly"
+        [class.gap-3]="!iconOnly"
+        (dblclick)="api.addItem(it.input)"
+      >
+        <mat-icon
+          [matTooltip]="iconOnly ? it.input.dndName : ''"
+          class="scale-150 block"
+        >
+          {{ it.input.dndIcon }}
+        </mat-icon>
+        <span class="w-32" *ngIf="!iconOnly">
+          {{ it.input.dndName }}
+        </span>
+      </div>
+    </ng-template>
+  </dnd-list-input-source>
+
+  <dnd-list-input-target
+    listContainerClass="flex flex-col gap-4 w-96 dashed-cdk-drag-placeholder"
+    itemContainerClass="flex flex-row gap-1 bg-white shadow-md p-3 rounded-md items-center"
+    (inputAdded)="focusAndSelectedEditableInputText($event)"
+  >
+    <ng-template #dragHandle>
+      <div class="w-8 h-8 flex items-center">
+        <mat-icon class="cursor-move">drag_indicator</mat-icon>
+      </div>
+    </ng-template>
+
+    <!-- use itemContainerClass input of parent to control item layout -->
+    <ng-template #item let-it>
+      <mat-icon>{{ it.item?.dndIcon }}</mat-icon>
+
+      <editable
+        class="w-full"
+        [id]="[it.item.key] + '-editable'"
+        #editable
+        (modeChange)="editableModeChange($event, it.item)"
+        (save)="
+          api.updateFormLabel(it.item, controlsByKey[it.item.key + ''].value)
+        "
+      >
+        <ng-template viewMode>
+          {{ it.item?.templateOptions?.label || "Unknown" }}
+        </ng-template>
+
+        <ng-template editMode>
+          <input
+            class="w-full form-input h-8 rounded-sm"
+            editableOnEnter
+            (focusout)="editable.saveEdit()"
+            [id]="it.item.key"
+            [formControl]="controlsByKey[it.item.key + '']"
+          />
+        </ng-template>
+      </editable>
+    </ng-template>
+
+    <ng-template #placeholder>
+      <div
+        class="
+          w-full
+          h-64
+          flex flex-row
+          items-center
+          justify-center
+          border-indigo-400 border-4 border-dashed
+          box-content
+          bg-indigo-50
+          rounded-md
+        "
+      >
+        <mat-icon class="text-indigo-200" style="transform: scale(3)">
+          add
+        </mat-icon>
+      </div>
+    </ng-template>
+  </dnd-list-input-target>
+
+  <dnd-form-preview
+    *ngIf="userMode === 'preview'"
+    class="ml-6"
+    [fields]="(api.fields$ | async) || []"
+  >
+  </dnd-form-preview>
+</dnd-form>

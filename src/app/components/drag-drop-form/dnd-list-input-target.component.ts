@@ -14,13 +14,13 @@ import { DnDFormConfig } from './model';
   selector: 'dnd-list-input-target',
   template: `
     <div
+      cdkDropList
       [class]="listContainerClass"
       [class.hidden-placeholder]="service.dropInputs.length === 0"
-      cdkDropList
       [cdkDropListData]="service.dropInputs"
       [class.list]="service.dropInputs.length > 0"
-      (cdkDropListEntered)="forcePreviewIconContainerHidden = true"
-      (cdkDropListExited)="forcePreviewIconContainerHidden = false"
+      (cdkDropListEntered)="_forcePreviewIconContainerHidden = true"
+      (cdkDropListExited)="_forcePreviewIconContainerHidden = false"
       (cdkDropListDropped)="drop($event)"
     >
       <div
@@ -30,8 +30,8 @@ import { DnDFormConfig } from './model';
           let isLast = last;
           let index = index
         "
-        (mouseenter)="mouserOverItemIndex = index"
-        (mouseleave)="mouserOverItemIndex = -1"
+        (mouseenter)="_mouserOverItemIndex = index"
+        (mouseleave)="_mouserOverItemIndex = -1"
         [cdkDragData]="item"
         [class]="itemContainerClass"
       >
@@ -54,7 +54,7 @@ import { DnDFormConfig } from './model';
           [ngTemplateOutletContext]="{
                 $implicit: {
                   item, 
-                  isHovered: mouserOverItemIndex === index
+                  isHovered: _mouserOverItemIndex === index
                 }
               }"
         >
@@ -64,7 +64,7 @@ import { DnDFormConfig } from './model';
       <!-- TODO apply transform scale animation when icon container disappears? -->
       <ng-container
         *ngIf="
-          !forcePreviewIconContainerHidden && service.dropInputs.length < 1
+          !_forcePreviewIconContainerHidden && service.dropInputs.length < 1
         "
       >
         <ng-template [ngTemplateOutlet]="placeholderRef || null"></ng-template>
@@ -87,8 +87,8 @@ export class DndListInputTargetComponent {
 
   @Output() inputAdded = new EventEmitter<DnDFormConfig>();
 
-  mouserOverItemIndex = -1;
-  forcePreviewIconContainerHidden = false;
+  _mouserOverItemIndex = -1;
+  _forcePreviewIconContainerHidden = false;
 
   drop(event: CdkDragDrop<DnDFormConfig[]>): void {
     const item = this.service.handleDropEvent(event);

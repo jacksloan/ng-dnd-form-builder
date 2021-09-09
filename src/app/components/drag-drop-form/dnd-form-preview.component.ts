@@ -17,10 +17,6 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
         [options]="options"
       ></formly-form>
     </form>
-
-    <button mat-raised-button color="accent" (click)="logFormFields()">
-      Log Form
-    </button>
   `,
   styles: [
     `
@@ -36,7 +32,6 @@ export class DndFormPreviewComponent {
   options: FormlyFormOptions = {};
   form = new FormGroup({});
   model = {};
-
   logFormFields() {
     console.log({
       model: this.model,

@@ -1,9 +1,8 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
-import { DnDFormConfig, DndFormInputs } from './model';
-import { v4 as createId } from 'uuid';
 import { BehaviorSubject } from 'rxjs';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { v4 as createId } from 'uuid';
+import { DnDFormConfig, DndFormInputs } from './model';
 
 @Injectable()
 export class DndFormService {

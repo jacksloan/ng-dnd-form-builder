@@ -10,13 +10,13 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
-        path: 'form-builder',
+        path: 'form-builder-material',
         loadChildren: () =>
-          import('./pages/form-builder/form-builder.module').then(
-            (m) => m.FormBuilderModule
+          import('./pages/form-builder-material/form-builder-material.module').then(
+            (m) => m.FormBuilderMaterialModule
           ),
       },
-      { path: '', redirectTo: '/form-builder', pathMatch: 'full' },
+      { path: '', redirectTo: '/form-builder-material', pathMatch: 'full' },
     ],
   },
   {

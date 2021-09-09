@@ -1,6 +1,7 @@
 import { CdkDragExit } from '@angular/cdk/drag-drop';
 import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { DndFormService } from './dnd-form.service';
+import { DnDFormConfig } from './model';
 
 @Component({
   selector: 'dnd-list-input-source',
@@ -10,7 +11,7 @@ import { DndFormService } from './dnd-form.service';
       cdkDropListSortingDisabled
       [class]="listContainerClass"
       [cdkDropListData]="service.copyFromInputs"
-      [cdkDropListEnterPredicate]="alwaysPreventDropPredicate"
+      [cdkDropListEnterPredicate]="_alwaysPreventDropPredicate"
       (cdkDropListExited)="addTemporaryInput($event)"
       (cdkDropListEntered)="cleanupTmeporaryInputs()"
     >
@@ -41,22 +42,34 @@ import { DndFormService } from './dnd-form.service';
   styles: [':host {display: block;}'],
 })
 export class DndListInputSourceComponent {
+  constructor(public service: DndFormService) {}
+
   @Input() listContainerClass: string = '';
   @Input() itemContainerClass: string = '';
 
+  /**
+   * #input content child is passed the context:
+   * {
+   *    input: DndFormConfig,
+   *    index: number,
+   *    isLast: boolean,
+   * }
+   */
   @ContentChild('input') itemRef!: TemplateRef<any>;
 
-  constructor(public service: DndFormService) {}
+  public addItem(config: DnDFormConfig) {
+    this.service.addItem(config);
+  }
 
-  cleanupTmeporaryInputs() {
+  public cleanupTmeporaryInputs() {
     this.service.cleanupTemporaryInputTypes();
   }
 
-  addTemporaryInput(event: CdkDragExit<any>) {
+  public addTemporaryInput(event: CdkDragExit<any>) {
     this.service.addTemporaryInput(event.item.data);
   }
 
-  alwaysPreventDropPredicate() {
+  _alwaysPreventDropPredicate() {
     return false;
   }
 }

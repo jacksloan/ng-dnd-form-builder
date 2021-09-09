@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormBuilderComponent } from './form-builder.component';
+import { FormBuilderComponent } from './form-builder-material.component';
 
 describe('FormBuilderComponent', () => {
   let component: FormBuilderComponent;
