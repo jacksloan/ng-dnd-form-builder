@@ -5,13 +5,10 @@ import {
   Component,
   Inject,
   Input,
-  QueryList,
-  ViewChild,
-  ViewChildren,
+  QueryList, ViewChild, ViewChildren
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
-import { DndFormComponent } from 'src/app/components/drag-drop-form/dnd-form.component';
 import { DnDFormConfig } from 'src/app/components/drag-drop-form/model';
 
 @Component({

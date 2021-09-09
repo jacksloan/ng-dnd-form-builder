@@ -25,3 +25,20 @@ body {
 .dashed-cdk-drag-placeholder .cdk-drag-placeholder {
   @apply border-indigo-400 border-4 border-dashed box-content;
 }
+
+.basic-container {
+  border: 1px solid black;
+  background-color: white;
+  padding: 2rem;
+}
+
+.basic-drag-placeholder .cdk-drag-placeholder {
+  border: 1px dashed red;
+}
+
+.basic-item {
+  border: 1px solid black;
+  padding: 2rem;
+  width: 16rem;
+  cursor: move;
+}

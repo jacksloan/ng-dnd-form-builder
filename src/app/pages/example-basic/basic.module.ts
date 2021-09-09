@@ -1,25 +1,26 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditableModule } from '@ngneat/edit-in-place';
 import { FormlyModule } from '@ngx-formly/core';
 import { DragDropFormModule } from 'src/app/components/drag-drop-form/dnd-form.module';
+import { SharedFormPreviewModule } from 'src/app/shared/shared-form-preview.module';
 import { SharedMaterialModule } from 'src/app/shared/shared-material.module';
-import { FormBuilderRoutingModule } from './form-builder-material-routing.module';
-import { FormBuilderComponent } from './form-builder-material.component';
-import { MaterialExampleComponent } from './material-example.component';
+import { FormBuilderRoutingModule } from './basic-routing.module';
+import { BasicComponent } from './basic.component';
 
 @NgModule({
-  declarations: [FormBuilderComponent, MaterialExampleComponent],
+  declarations: [BasicComponent],
   imports: [
     CommonModule,
     DragDropFormModule,
-    SharedMaterialModule,
-    EditableModule,
     ReactiveFormsModule,
-    FormlyModule.forRoot({ extras: { lazyRender: true } }),
+    EditableModule,
+
+    SharedMaterialModule,
+    SharedFormPreviewModule,
+    FormlyModule,
     FormBuilderRoutingModule,
   ],
 })
-export class FormBuilderMaterialModule {}
+export class BasicModule {}

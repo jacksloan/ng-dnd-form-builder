@@ -12,8 +12,15 @@ const routes: Routes = [
       {
         path: 'form-builder-material',
         loadChildren: () =>
-          import('./pages/form-builder-material/form-builder-material.module').then(
+          import('./pages/example-material/form-builder-material.module').then(
             (m) => m.FormBuilderMaterialModule
+          ),
+      },
+      {
+        path: 'form-builder-basic',
+        loadChildren: () =>
+          import('./pages/example-basic/basic.module').then(
+            (m) => m.BasicModule
           ),
       },
       { path: '', redirectTo: '/form-builder-material', pathMatch: 'full' },

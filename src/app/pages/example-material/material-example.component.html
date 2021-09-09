@@ -84,11 +84,4 @@
       </div>
     </ng-template>
   </dnd-list-input-target>
-
-  <dnd-form-preview
-    *ngIf="userMode === 'preview'"
-    class="ml-6"
-    [fields]="(api.fields$ | async) || []"
-  >
-  </dnd-form-preview>
 </dnd-form>
