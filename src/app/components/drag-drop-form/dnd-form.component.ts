@@ -115,7 +115,7 @@ export class DndFormComponent {
 
   fields$ = this.service.fields$;
   controlsByKey: { [k: string]: FormControl } = {};
-  iconOnly = false;
+  iconOnly = true;
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
     this.controlsByKey = {};
