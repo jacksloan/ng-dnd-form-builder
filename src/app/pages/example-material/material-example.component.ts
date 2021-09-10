@@ -39,10 +39,9 @@ export class MaterialExampleComponent {
   }
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
-    this.controlsByKey = {};
+    this.controlsByKey[item.key + ''] = new FormControl();
 
     if (mode === 'edit') {
-      this.controlsByKey[item.key + ''] = new FormControl();
       const control = this.controlsByKey[item.key + ''];
       control?.setValue(item.templateOptions?.label);
     }

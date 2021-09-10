@@ -3,10 +3,10 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
-    MatDialog,
-    MatDialogModule,
-    MatDialogRef,
-    MAT_DIALOG_DATA
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
@@ -14,7 +14,7 @@ import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 
 @Component({
   template: `
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="max-height">
       <formly-form
         [form]="form"
         [fields]="data.fields || []"
@@ -22,6 +22,7 @@ import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
       ></formly-form>
     </form>
   `,
+  styles: ['.max-height { max-height: 90vh; }'],
 })
 export class FormPreviewDialog {
   constructor(
