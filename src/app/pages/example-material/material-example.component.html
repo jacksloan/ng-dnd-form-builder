@@ -1,6 +1,21 @@
-<dnd-form #api cdkDropListGroup class="flex flex-row p-4 gap-2">
+<mat-toolbar class="flex flex-row justify-between">
+  <span>Drag and Drop Form Builder</span>
+  <ng-container *ngIf="api.fields$ | async as fields">
+    <button
+      [disabled]="fields.length < 1"
+      mat-raised-button
+      color="primary"
+      (click)="showPreview(fields)"
+    >
+      <mat-icon> visibility </mat-icon>
+      Form preview
+    </button>
+  </ng-container>
+</mat-toolbar>
+
+<dnd-form #api cdkDropListGroup class="flex flex-row p-2 md:p-4 gap-1 md:gap-2">
   <dnd-list-input-source
-    listContainerClass="flex flex-col gap-4 px-3"
+    listContainerClass="flex flex-col gap-4 px-1 md:px-3"
     itemContainerClass="flex flex-row items-center justify-start gap-5 p-4 shadow-md bg-white rounded-md cursor-move"
   >
     <ng-template #input let-it>
@@ -25,7 +40,8 @@
   </dnd-list-input-source>
 
   <dnd-list-input-target
-    listContainerClass="flex flex-col gap-4 w-96 dashed-cdk-drag-placeholder"
+    class="flex-1 md:flex-none md:w-96"
+    listContainerClass=" flex flex-col gap-4 w-full dashed-cdk-drag-placeholder"
     itemContainerClass="flex flex-row gap-1 bg-white shadow-md p-3 rounded-md items-center"
     (inputAdded)="focusAndSelectedEditableInputText($event)"
   >
@@ -67,8 +83,7 @@
     <ng-template #placeholder>
       <div
         class="
-          w-full
-          h-64
+          h-80
           flex flex-row
           items-center
           justify-center

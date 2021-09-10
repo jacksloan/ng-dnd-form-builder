@@ -1,4 +1,3 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,12 +8,11 @@ import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
 import { DragDropFormModule } from 'src/app/components/drag-drop-form/dnd-form.module';
 import { SharedFormPreviewModule } from 'src/app/shared/shared-form-preview.module';
 import { SharedMaterialModule } from 'src/app/shared/shared-material.module';
-import { FormBuilderRoutingModule } from './form-builder-material-routing.module';
-import { FormBuilderComponent } from './form-builder-material.component';
+import { FormBuilderRoutingModule } from './material-example-routing.module';
 import { MaterialExampleComponent } from './material-example.component';
 
 @NgModule({
-  declarations: [FormBuilderComponent, MaterialExampleComponent],
+  declarations: [MaterialExampleComponent],
   imports: [
     CommonModule,
 
@@ -32,4 +30,4 @@ import { MaterialExampleComponent } from './material-example.component';
     FormBuilderRoutingModule,
   ],
 })
-export class FormBuilderMaterialModule {}
+export class MaterialExampleModule {}

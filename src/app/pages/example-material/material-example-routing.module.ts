@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FormBuilderComponent } from './form-builder-material.component';
+import { MaterialExampleComponent } from './material-example.component';
 
-const routes: Routes = [{ path: '', component: FormBuilderComponent }];
+const routes: Routes = [{ path: '', component: MaterialExampleComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

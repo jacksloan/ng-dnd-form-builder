@@ -12,7 +12,7 @@ import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
         <button
           [disabled]="fields.length < 1"
           mat-raised-button
-          color="accent"
+          color="primary"
           (click)="previewForm(fields)"
         >
           <mat-icon>visibility</mat-icon>
@@ -20,7 +20,7 @@ import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
         </button>
       </ng-container>
     </mat-toolbar>
-    <dnd-form cdkDropListGroup #api class="flex flex-row gap-2">
+    <dnd-form cdkDropListGroup #api class="basic flex flex-row gap-2 p-2">
       <!-- drag from list -->
       <dnd-list-input-source
         listContainerClass="basic-container"
@@ -42,15 +42,21 @@ import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
         </ng-template>
 
         <ng-template #placeholder>
-          <p class="p-8 w-64 border border-black border-dashed">
-            Drop Items Here
-          </p>
+          <p class="placeholder">Drop Items Here</p>
         </ng-template>
       </dnd-list-input-target>
     </dnd-form>
   `,
   styles: [
-    // see "src/styles.css"
+    `
+      .placeholder {
+        border: 1px dashed black;
+        padding: 0.5rem;
+        min-width: 7rem;
+        cursor: move;
+      }
+    `,
+    // see also "src/styles.css"
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

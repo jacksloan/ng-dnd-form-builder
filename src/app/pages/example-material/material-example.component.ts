@@ -5,11 +5,14 @@ import {
   Component,
   Inject,
   Input,
-  QueryList, ViewChild, ViewChildren
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DnDFormConfig } from 'src/app/components/drag-drop-form/model';
+import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
 
 @Component({
   selector: 'app-material-example',
@@ -19,6 +22,7 @@ import { DnDFormConfig } from 'src/app/components/drag-drop-form/model';
 export class MaterialExampleComponent {
   constructor(
     private cdr: ChangeDetectorRef,
+    private formPreviewService: FormPreviewService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -27,7 +31,12 @@ export class MaterialExampleComponent {
   @ViewChildren('editable') editable?: QueryList<EditableComponent>;
 
   controlsByKey: { [k: string]: FormControl } = {};
+
   iconOnly = true;
+
+  showPreview(fields: FormlyFieldConfig[]) {
+    this.formPreviewService.openPreviewModal(fields);
+  }
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
     this.controlsByKey = {};

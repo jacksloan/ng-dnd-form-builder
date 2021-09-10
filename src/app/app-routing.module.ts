@@ -12,8 +12,8 @@ const routes: Routes = [
       {
         path: 'form-builder-material',
         loadChildren: () =>
-          import('./pages/example-material/form-builder-material.module').then(
-            (m) => m.FormBuilderMaterialModule
+          import('./pages/example-material/material-example.module').then(
+            (m) => m.MaterialExampleModule
           ),
       },
       {
