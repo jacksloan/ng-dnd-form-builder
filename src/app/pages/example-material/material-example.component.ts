@@ -11,8 +11,8 @@ import {
 import { FormControl } from '@angular/forms';
 import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { DnDFormConfig } from 'src/app/components/drag-drop-form/model';
-import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
+import { DnDFormConfig } from '../../components/drag-drop-form/model';
+import { FormPreviewService } from '../../shared/shared-form-preview.module';
 
 @Component({
   selector: 'app-material-example',

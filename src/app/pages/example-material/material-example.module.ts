@@ -5,9 +5,9 @@ import { EditableModule } from '@ngneat/edit-in-place';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { FormlyMatDatepickerModule } from '@ngx-formly/material/datepicker';
-import { DragDropFormModule } from 'src/app/components/drag-drop-form';
-import { SharedFormPreviewModule } from 'src/app/shared/shared-form-preview.module';
-import { SharedMaterialModule } from 'src/app/shared/shared-material.module';
+import { DragDropFormModule } from '../../components/drag-drop-form';
+import { SharedFormPreviewModule } from '../../shared/shared-form-preview.module';
+import { SharedMaterialModule } from '../../shared/shared-material.module';
 import { FormBuilderRoutingModule } from './material-example-routing.module';
 import { MaterialExampleComponent } from './material-example.component';
 
@@ -30,4 +30,4 @@ import { MaterialExampleComponent } from './material-example.component';
     FormBuilderRoutingModule,
   ],
 })
-export class MaterialExampleModule {}
+export class MaterialExampleModule { }

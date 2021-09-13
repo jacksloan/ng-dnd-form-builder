@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditableModule } from '@ngneat/edit-in-place';
-import { SharedMaterialModule } from 'src/app/shared/shared-material.module';
+import { SharedMaterialModule } from '../../shared/shared-material.module';
 import { DndFormComponent } from './dnd-form.component';
 import { DndListInputSourceComponent } from './dnd-list-input-source.component';
 import { DndListInputTargetComponent } from './dnd-list-input-target.component';

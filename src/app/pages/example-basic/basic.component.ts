@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { FormPreviewService } from 'src/app/shared/shared-form-preview.module';
+import { FormPreviewService } from '../../shared/shared-form-preview.module';
 
 @Component({
   selector: 'app-basic',
