@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, NgModule } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -29,7 +29,7 @@ export class FormPreviewDialog {
     @Inject(MAT_DIALOG_DATA) public data: { fields: FormlyFieldConfig[] }
   ) {}
 
-  form = new FormGroup({});
+  form = new UntypedFormGroup({});
   model = {};
 }
 

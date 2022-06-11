@@ -8,7 +8,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { EditableComponent } from '@ngneat/edit-in-place/lib/editable.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DnDFormConfig } from '../../components/drag-drop-form/model';
@@ -30,7 +30,7 @@ export class MaterialExampleComponent {
 
   @ViewChildren('editable') editable?: QueryList<EditableComponent>;
 
-  controlsByKey: { [k: string]: FormControl } = {};
+  controlsByKey: { [k: string]: UntypedFormControl } = {};
 
   iconOnly = true;
 
@@ -39,7 +39,7 @@ export class MaterialExampleComponent {
   }
 
   editableModeChange(mode: 'view' | 'edit', item: DnDFormConfig) {
-    this.controlsByKey[item.key + ''] = new FormControl();
+    this.controlsByKey[item.key + ''] = new UntypedFormControl();
 
     if (mode === 'edit') {
       const control = this.controlsByKey[item.key + ''];

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { FormPreviewService } from '../../shared/shared-form-preview.module';
 
@@ -63,7 +63,7 @@ import { FormPreviewService } from '../../shared/shared-form-preview.module';
 export class BasicComponent {
   constructor(private formPreviewService: FormPreviewService) {}
 
-  form = new FormGroup({});
+  form = new UntypedFormGroup({});
   model = {};
 
   previewForm(fields: FormlyFieldConfig[]) {
