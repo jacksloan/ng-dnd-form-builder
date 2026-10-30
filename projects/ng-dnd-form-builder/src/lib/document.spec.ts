@@ -1,3 +1,4 @@
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { describe, expect, it } from 'vitest';
 import { addField, duplicateField, moveField, removeField, setShowWhen, toKey, updateField } from './commands';
 import { conditionCandidates, hasConditionCycle, hideExpression } from './conditions';
@@ -149,5 +150,14 @@ describe('validateDocument', () => {
     expect(isSafeExpression('(model.a > 1) && !(model.b === "(x)")')).toBe(true);
     const doc = addField(createDocument(), { ...text('e', 'e'), expressions: { hide: 'alert(1)' } }, null, 0);
     expect(codes(doc)).toEqual(['unsafe-expression', 'custom-condition']);
+    for (const slot of [
+      { expressions: { 'props.label': 'alert(1)' } },
+      { expressionProperties: { 'props.label': 'alert(1)' } },
+      { hideExpression: 'alert(1)' },
+      { validators: { x: { expression: 'alert(1)' } } },
+    ]) {
+      const hostile = addField(createDocument(), { ...text('e', 'e'), ...slot } as FormlyFieldConfig, null, 0);
+      expect(codes(hostile), JSON.stringify(slot)).toContain('unsafe-expression');
+    }
   });
 });

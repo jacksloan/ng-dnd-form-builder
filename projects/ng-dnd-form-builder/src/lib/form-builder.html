@@ -1,0 +1,113 @@
+@if (loadIssues().length) {
+  <div class="dnd-load-error" role="alert">
+    <p><strong>{{ m.loadError }}</strong></p>
+    <ul>
+      @for (issue of loadIssues(); track $index) {
+        <li>{{ m.issues[issue.code] }}</li>
+      }
+    </ul>
+  </div>
+} @else {
+  <div class="dnd-toolbar">
+    <div class="dnd-toggle" role="group">
+      <button type="button" class="dnd-button" [attr.aria-pressed]="mode() === 'edit'" (click)="mode.set('edit')">{{ m.edit }}</button>
+      <button type="button" class="dnd-button" [attr.aria-pressed]="mode() === 'preview'" (click)="mode.set('preview')">{{ m.preview }}</button>
+    </div>
+    <button type="button" class="dnd-button" [disabled]="!store.canUndo()" (click)="store.undo()">{{ m.undo }}</button>
+    <button type="button" class="dnd-button" [disabled]="!store.canRedo()" (click)="store.redo()">{{ m.redo }}</button>
+    <span class="dnd-spacer"></span>
+    <ng-content select="[dndToolbar]" />
+  </div>
+
+  @for (issue of documentIssues(); track issue.code) {
+    <p class="dnd-issues" role="status">{{ m.issues[issue.code] }}</p>
+  }
+
+  @if (mode() === 'edit') {
+    <div class="dnd-panes" [class.dnd-has-selection]="store.selected()">
+      <section class="dnd-pane dnd-palette" [attr.aria-label]="m.palette">
+        <h2 class="dnd-heading">{{ m.palette }}</h2>
+        <div
+          class="dnd-palette-list"
+          cdkDropList
+          cdkDropListSortingDisabled
+          cdkDropListHasAnchor
+          [id]="store.paletteId"
+          [cdkDropListConnectedTo]="store.listIds()"
+          [cdkDropListEnterPredicate]="neverEnter"
+        >
+          @for (definition of store.config.definitions; track definition.label) {
+            <button
+              type="button"
+              class="dnd-palette-item"
+              cdkDrag
+              cdkDragPreviewContainer="parent"
+              [cdkDragData]="{ definition }"
+              (click)="store.addAfterSelection(definition)"
+            >
+              <dnd-icon [svg]="definition.icon" />
+              {{ definition.label }}
+              <div class="dnd-palette-placeholder" *cdkDragPlaceholder></div>
+              <div class="dnd-palette-preview" *cdkDragPreview>
+                <dnd-icon [svg]="definition.icon" />
+                {{ definition.label }}
+              </div>
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="dnd-pane dnd-canvas" [attr.aria-label]="m.canvas">
+        <h2 class="dnd-heading dnd-canvas-heading" tabindex="-1">{{ m.canvas }}</h2>
+        <dnd-field-list [fields]="store.doc().fieldGroup" (deleteRequest)="requestDelete($event)">
+          <ng-content select="[dndEmpty]">{{ m.emptyCanvas }}</ng-content>
+        </dnd-field-list>
+      </section>
+
+      <section class="dnd-pane dnd-settings" [attr.aria-label]="m.settings">
+        <div class="dnd-settings-heading">
+          <h2 class="dnd-heading">{{ m.settings }}</h2>
+          @if (store.selected()) {
+            <button type="button" class="dnd-button dnd-close" (click)="store.selectedId.set(null)">{{ m.closeSettings }}</button>
+          }
+        </div>
+        @if (store.selected(); as field) {
+          @for (current of [field]; track current.id) {
+            <dnd-settings-panel [field]="current" />
+          }
+        } @else {
+          <p class="dnd-muted">{{ m.noSelection }}</p>
+        }
+      </section>
+    </div>
+  } @else if (previewBlocked()) {
+    <p class="dnd-issues" role="alert">{{ m.previewBlocked }}</p>
+  } @else {
+    <div class="dnd-preview">
+      <form [formGroup]="preview().form" (submit)="$event.preventDefault()">
+        <formly-form
+          [form]="preview().form"
+          [fields]="preview().fields"
+          [model]="preview().model"
+          (modelChange)="previewData.set($event)"
+        />
+      </form>
+      <h2 class="dnd-heading">{{ m.submittedData }}</h2>
+      <pre class="dnd-code" tabindex="0">{{ previewJson() }}</pre>
+    </div>
+  }
+
+  <dialog #deleteDialog class="dnd-dialog" (cancel)="pendingDelete.set(null)">
+    <h2 class="dnd-heading">{{ m.confirmDelete(pendingDeleteLabel()) }}</h2>
+    <p>{{ m.confirmDeleteBody }}</p>
+    <ul>
+      @for (field of dependents(); track field.id) {
+        <li>{{ store.label(field) }}</li>
+      }
+    </ul>
+    <div class="dnd-dialog-actions">
+      <button type="button" class="dnd-button" (click)="closeDelete()">{{ m.cancel }}</button>
+      <button type="button" class="dnd-button dnd-danger" (click)="confirmDelete()">{{ m.remove }}</button>
+    </div>
+  </dialog>
+}

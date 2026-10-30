@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+:root { color-scheme: light dark; }
+body { margin: 0; color: light-dark(#1c1c1f, #f2f2f4); background: light-dark(#fff, #1c1c1f); font: 14px/1.4 system-ui, sans-serif; }
+html {
+  --mat-sys-body-small-font: system-ui, sans-serif;
+  --mat-sys-body-medium-font: system-ui, sans-serif;
+  --mat-sys-body-large-font: system-ui, sans-serif;
+}

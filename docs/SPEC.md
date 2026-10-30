@@ -1,6 +1,6 @@
 # ng-dnd-form-builder: v1 specification
 
-Status: agreed, not yet built. All existing code is to be scrapped; only the idea carries over.
+Status: built on this branch, not yet published. The previous code is kept at the `legacy` tag.
 
 ## 1. Product
 
@@ -124,6 +124,7 @@ The exact shape may be refined during the schema step; the rules below are the c
 ### Groups and keys
 
 - Groups are layout only. Submitted data stays flat, such as `{ firstName, city }`, and moving a field between groups never changes the data shape.
+- A group's label appears in the builder only, because Formly doesn't render labels for groups. Hosts can add a Formly wrapper for a visible heading.
 - Keys are unique across the whole form.
 - A key is generated from the first label ("First name" becomes `firstName`, then `firstName2` on a clash).
 - Later label edits don't change the key, so saved answers stay valid. It can be edited under "Advanced".
@@ -184,6 +185,8 @@ File upload, signature, rich text and similar types are left to custom field typ
 - **While editing:** invalid states are allowed. Issues show inline, such as a radio with no options, and the builder exposes them through `issues`. The host decides whether to allow publishing.
 - **On load:** `validateDocument` runs on every incoming document, because that is a trust boundary. Structurally broken documents show an error state instead of rendering. It also flags any expression that doesn't match its rule or that the safe parser can't read.
 - **Unknown field types:** kept and flagged, never dropped, so opening a form can't silently destroy data.
+- **Other expression slots:** `validateDocument` also checks `expressionProperties`, `hideExpression`, `validators`, `asyncValidators` and the rest of `expressions`, since Formly evaluates strings there too.
+- **Preview:** blocked while a form has an unknown field type or an unsafe expression. `provideFormBuilder` also turns on the safe parser.
 - **Output safety:** the builder renders labels as text, never HTML, and evaluates expressions only through the safe parser. Rendering pages depend on the host enabling that parser (section 3).
 
 ## 9. Interface
@@ -200,13 +203,10 @@ Keyboard and screen-reader support is a hard v1 requirement.
 
 Use CDK nested connected lists. Palette items use the CDK drag preview and placeholder without touching list data, which replaces the old temporary-item trick.
 
-Nested CDK drop lists have a reported problem where the outer list wins the drop, so this is proven first. A half-day spike must pass, with Playwright coverage:
+CDK nested connected lists passed the spike, so the flat-list fallback wasn't needed. Two details keep them reliable, and both are covered by end-to-end tests:
 
-- palette-to-group drops
-- moves between groups
-- three levels of nesting
-
-If it fails, render the tree as one flat CDK list with indentation.
+- **Inner lists are connected first**, so a drop over a nested group lands in the group.
+- **Canvas placeholders take no space.** The CDK caches each list's position when a drag starts, so a placeholder that pushes nested lists around makes later drops miss them. An insertion line is shown instead.
 
 ## 10. Internationalisation
 
@@ -221,18 +221,14 @@ All built-in UI text and announcements default to English and can be overridden 
 - **Docs:** a short README with quick-start, API and document format.
 - **Versioning:** the major version tracks Angular, supporting only the current Angular major. The peer range follows Formly's Angular requirement.
 
-## 12. Build order
+## 12. Confirmed against Formly 11.0.0
 
-Start in this repo: tag the current state `legacy`, then remove the old code in a single "scrap" commit.
+Each of these is covered by `formly-compat.spec.ts`:
 
-1. Schema and pure functions (`validateDocument`, expression generation), first confirming against the published Formly 11 package what has so far only been read in Formly's `main` branch and docs: the safe parser's syntax, keyless groups keeping data flat, `resetOnHide`, and `props.showWhen` having no side effects
-2. Store and undo
-3. Drag-and-drop spike
-4. Canvas and palette
-5. Settings
-6. Conditions
-7. Preview
-8. Demo and release
+- `withFormlyFieldExpression()` evaluates generated expressions without `Function()`, including values containing quotes.
+- Without it, Formly falls back to `Function()`.
+- Keyless groups keep data flat, and `resetOnHide` clears hidden values, including inside a hidden group.
+- `props.showWhen` has no side effects when rendered.
 
 ## 13. Decisions to revisit
 

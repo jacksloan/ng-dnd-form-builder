@@ -1,64 +1,120 @@
-# NgDndFormBuilder
+# ng-dnd-form-builder
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Drag-and-drop form builder for Angular. What it saves is a plain [ngx-formly](https://formly.dev) field, so your pages render saved forms with Formly alone.
 
-## Code scaffolding
+[Demo](https://jacksloan.github.io/ng-dnd-form-builder) · [Specification](docs/SPEC.md)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Requires Angular 22 and `@ngx-formly/core` 11.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Quick start
 
 ```bash
-ng generate --help
+npm install ng-dnd-form-builder @angular/cdk @angular/aria @ngx-formly/core
 ```
 
-## Building
+You also need a Formly UI. This example uses `@ngx-formly/material`.
 
-To build the library, run:
+```ts
+provideFormlyCore([...withFormlyMaterial(), withFormlyFieldExpression()]),
+provideFormBuilder(),
+```
+
+```ts
+@Component({
+  imports: [FormBuilder],
+  template: `<dnd-form-builder [(document)]="form" (issues)="issues.set($event)" />`,
+})
+export class EditForm {
+  form = signal<FormDocument | undefined>(undefined); // load and save this yourself
+  issues = signal<DocumentIssue[]>([]);
+}
+```
+
+## Rendering a saved form
+
+No code from this library is needed on the page:
+
+```ts
+// Formly writes into what it renders, so give it a copy.
+fields = [structuredClone(savedForm)];
+```
+
+```html
+<form [formGroup]="form"><formly-form [form]="form" [fields]="fields" [model]="model" /></form>
+```
+
+> [!IMPORTANT]
+> Every page that renders a saved form must use `withFormlyFieldExpression()`. Without it, Formly evaluates each condition with `Function()`, so a document from an untrusted source could run code, and a strict Content Security Policy would block the form.
+
+If documents come from somewhere you don't fully control, run `validateDocument(doc)` first. Refuse any with a `fatal` issue or an `unsafe-expression` code.
+
+## API
+
+| Export | Purpose |
+| --- | --- |
+| `<dnd-form-builder [(document)] (issues)>` | The builder. An empty `document` starts a new form. `issues` reports what's wrong, and you decide whether to allow publishing. |
+| `provideFormBuilder({ fieldTypes, messages })` | Adds custom field types and overrides UI text. |
+| `validateDocument(doc, knownTypes?)` | Checks a document, returning a list of `DocumentIssue`. |
+| `createDocument()` | Returns an empty document. |
+
+**Slots:** `[dndToolbar]` adds toolbar content and `[dndEmpty]` replaces the empty canvas message.
+
+**Theming:** set `--dnd-bg`, `--dnd-surface`, `--dnd-text`, `--dnd-muted`, `--dnd-border`, `--dnd-accent`, `--dnd-accent-text`, `--dnd-danger`, `--dnd-radius` and `--dnd-gap` on `dnd-form-builder`.
+
+### Custom field types
+
+Register the component with Formly as usual, then tell the builder about it:
+
+```ts
+provideFormlyCore([...withFormlyMaterial(), withFormlyFieldExpression(), { types: [{ name: 'rating', component: RatingField }] }]),
+provideFormBuilder({
+  fieldTypes: [{
+    type: 'rating',
+    label: 'Rating',
+    icon: '<svg>…</svg>',
+    defaults: { props: { max: 5 } },
+    settings: [/* FormlyFieldConfig[] bound to the field's props */],
+  }],
+}),
+```
+
+## Document format
+
+```json
+{
+  "props": { "schemaVersion": 1 },
+  "fieldGroup": [
+    { "id": "f1", "key": "hasPet", "type": "checkbox", "props": { "label": "Do you have a pet?" } },
+    {
+      "id": "f2", "key": "petName", "type": "input",
+      "props": {
+        "type": "text", "label": "Pet name",
+        "showWhen": { "match": "all", "conditions": [{ "field": "f1", "op": "equals", "value": true }] }
+      },
+      "expressions": { "hide": "!((model[\"hasPet\"] === true))" }
+    }
+  ]
+}
+```
+
+- Groups are layout only, so submitted data stays flat.
+- `props.showWhen` is the editable rule. The builder regenerates `expressions.hide` from it. A `hide` written by hand is kept as a custom condition.
+- A group's label appears in the builder only, because Formly doesn't render labels for groups. Add a Formly wrapper if you want a visible heading.
+
+## Development
 
 ```bash
-ng build ng-dnd-form-builder
+npm start
 ```
-
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-
-   ```bash
-   cd dist/ng-dnd-form-builder
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
 ```bash
-ng test
+npm test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
 ```bash
-ng e2e
+npm run e2e
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run lint
+```
+```bash
+npm run build
+```

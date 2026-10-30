@@ -145,11 +145,15 @@ export interface FieldPatch {
   props?: FormlyFieldConfig['props'];
 }
 
+function dropUnset(props: Record<string, unknown>): NonNullable<FormlyFieldConfig['props']> {
+  return Object.fromEntries(Object.entries(props).filter(([, value]) => value !== undefined));
+}
+
 /** Applies settings. A field's key follows its label only until the default label is first replaced. */
 export function updateField(doc: FormDocument, id: string, patch: FieldPatch, defaultLabel?: string): FormDocument {
   const field = findField(doc, id);
   if (!field) return doc;
-  const props = { ...field.props, ...patch.props };
+  const props = dropUnset({ ...field.props, ...patch.props });
   let key = patch.key ?? field.key;
   const label = props['label'];
   if (

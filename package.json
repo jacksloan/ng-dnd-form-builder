@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve demo",
+    "build": "ng build ng-dnd-form-builder && ng build demo",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test ng-dnd-form-builder --watch=false",
+    "e2e": "playwright test",
+    "lint": "ng lint"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
@@ -30,14 +32,15 @@
     "@angular/cli": "^22.2.5",
     "@angular/compiler-cli": "^22.2.0",
     "@axe-core/playwright": "^4.14.0",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.1",
-    "angular-eslint": "^22.6.0",
-    "eslint": "^10.14.0",
+    "angular-eslint": "22.6.0",
+    "eslint": "^10.12.0",
     "jsdom": "^30.0.0",
     "ng-packagr": "^22.2.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.72.1",
+    "typescript-eslint": "8.71.0",
     "vitest": "^5.0.0"
   }
 }

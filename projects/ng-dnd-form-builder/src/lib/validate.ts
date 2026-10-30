@@ -49,6 +49,14 @@ export function isSafeExpression(expression: string): boolean {
   return true;
 }
 
+/** Everywhere Formly accepts a string it will evaluate, not just the `hide` the builder writes. */
+const EXPRESSION_SLOTS = ['expressions', 'expressionProperties', 'hideExpression', 'validators', 'asyncValidators'] as const;
+
+function strings(value: unknown): string[] {
+  if (typeof value === 'string') return [value];
+  return value && typeof value === 'object' ? Object.values(value).flatMap(strings) : [];
+}
+
 function isJson(value: unknown): boolean {
   if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) return true;
   if (Array.isArray(value)) return value.every(isJson);
@@ -98,8 +106,9 @@ export function validateDocument(doc: unknown, knownTypes?: ReadonlySet<string>)
       }
     }
 
-    const hide = field.expressions?.['hide'];
-    if (typeof hide === 'string' && !isSafeExpression(hide)) add('unsafe-expression');
+    if (EXPRESSION_SLOTS.some((slot) => strings(field[slot]).some((text) => !isSafeExpression(text)))) {
+      add('unsafe-expression');
+    }
     if (hasCustomCondition(field, candidate)) add('custom-condition');
     if (showWhenOf(field)?.conditions.some((c) => byId.get(c.field)?.key === undefined)) add('broken-condition');
   }
