@@ -1,0 +1,14 @@
+<main>
+  <h1>ng-dnd-form-builder</h1>
+  <p>
+    Build a form below. What you save is a plain
+    <a href="https://formly.dev">ngx-formly</a> field, ready for <code>&lt;formly-form&gt;</code>.
+  </p>
+  <dnd-form-builder [(document)]="document" (issues)="issues.set($event)">
+    <button dndToolbar type="button" class="dnd-button" (click)="reset()">Start over</button>
+  </dnd-form-builder>
+  <details>
+    <summary>Saved document ({{ issues().length }} issues)</summary>
+    <pre tabindex="0" data-testid="document">{{ document() | json }}</pre>
+  </details>
+</main>

@@ -1,0 +1,29 @@
+{
+  "name": "ng-dnd-form-builder",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/aria": "^22.0.0",
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@ngx-formly/core": "^11.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "description": "Drag-and-drop form builder for Angular whose saved forms are plain ngx-formly field configs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacksloan/ng-dnd-form-builder.git"
+  },
+  "keywords": [
+    "angular",
+    "ngx-formly",
+    "form-builder",
+    "drag-and-drop"
+  ]
+}

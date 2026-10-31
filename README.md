@@ -1,29 +1,120 @@
-# NgDndForms
+# ng-dnd-form-builder
 
-Drag and drop for quickly building ngx-formly forms
+Drag-and-drop form builder for Angular. What it saves is a plain [ngx-formly](https://formly.dev) field, so your pages render saved forms with Formly alone.
 
-[Demo](https://jacksloan.github.io/ng-dnd-form-builder)
+[Demo](https://jacksloan.github.io/ng-dnd-form-builder) · [Specification](docs/SPEC.md)
 
-## Development server
+Requires Angular 22 and `@ngx-formly/core` 11.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Quick start
 
-## Code scaffolding
+```bash
+npm install ng-dnd-form-builder @angular/cdk @angular/aria @ngx-formly/core
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+You also need a Formly UI. This example uses `@ngx-formly/material`.
 
-## Build
+```ts
+provideFormlyCore([...withFormlyMaterial(), withFormlyFieldExpression()]),
+provideFormBuilder(),
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```ts
+@Component({
+  imports: [FormBuilder],
+  template: `<dnd-form-builder [(document)]="form" (issues)="issues.set($event)" />`,
+})
+export class EditForm {
+  form = signal<FormDocument | undefined>(undefined); // load and save this yourself
+  issues = signal<DocumentIssue[]>([]);
+}
+```
 
-## Running unit tests
+## Rendering a saved form
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+No code from this library is needed on the page:
 
-## Running end-to-end tests
+```ts
+// Formly writes into what it renders, so give it a copy.
+fields = [structuredClone(savedForm)];
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```html
+<form [formGroup]="form"><formly-form [form]="form" [fields]="fields" [model]="model" /></form>
+```
 
-## Further help
+> [!IMPORTANT]
+> Every page that renders a saved form must use `withFormlyFieldExpression()`. Without it, Formly evaluates each condition with `Function()`, so a document from an untrusted source could run code, and a strict Content Security Policy would block the form.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+If documents come from somewhere you don't fully control, run `validateDocument(doc)` first. Refuse any with a `fatal` issue or an `unsafe-expression` code.
+
+## API
+
+| Export | Purpose |
+| --- | --- |
+| `<dnd-form-builder [(document)] (issues)>` | The builder. An empty `document` starts a new form. `issues` reports what's wrong, and you decide whether to allow publishing. |
+| `provideFormBuilder({ fieldTypes, messages })` | Adds custom field types and overrides UI text. |
+| `validateDocument(doc, knownTypes?)` | Checks a document, returning a list of `DocumentIssue`. |
+| `createDocument()` | Returns an empty document. |
+
+**Slots:** `[dndToolbar]` adds toolbar content and `[dndEmpty]` replaces the empty canvas message.
+
+**Theming:** set `--dnd-bg`, `--dnd-surface`, `--dnd-text`, `--dnd-muted`, `--dnd-border`, `--dnd-accent`, `--dnd-accent-text`, `--dnd-danger`, `--dnd-radius` and `--dnd-gap` on `dnd-form-builder`.
+
+### Custom field types
+
+Register the component with Formly as usual, then tell the builder about it:
+
+```ts
+provideFormlyCore([...withFormlyMaterial(), withFormlyFieldExpression(), { types: [{ name: 'rating', component: RatingField }] }]),
+provideFormBuilder({
+  fieldTypes: [{
+    type: 'rating',
+    label: 'Rating',
+    icon: '<svg>…</svg>',
+    defaults: { props: { max: 5 } },
+    settings: [/* FormlyFieldConfig[] bound to the field's props */],
+  }],
+}),
+```
+
+## Document format
+
+```json
+{
+  "props": { "schemaVersion": 1 },
+  "fieldGroup": [
+    { "id": "f1", "key": "hasPet", "type": "checkbox", "props": { "label": "Do you have a pet?" } },
+    {
+      "id": "f2", "key": "petName", "type": "input",
+      "props": {
+        "type": "text", "label": "Pet name",
+        "showWhen": { "match": "all", "conditions": [{ "field": "f1", "op": "equals", "value": true }] }
+      },
+      "expressions": { "hide": "!((model[\"hasPet\"] === true))" }
+    }
+  ]
+}
+```
+
+- Groups are layout only, so submitted data stays flat.
+- `props.showWhen` is the editable rule. The builder regenerates `expressions.hide` from it. A `hide` written by hand is kept as a custom condition.
+- A group's label appears in the builder only, because Formly doesn't render labels for groups. Add a Formly wrapper if you want a visible heading.
+
+## Development
+
+```bash
+npm start
+```
+```bash
+npm test
+```
+```bash
+npm run e2e
+```
+```bash
+npm run lint
+```
+```bash
+npm run build
+```

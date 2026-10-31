@@ -1,0 +1,149 @@
+.dnd-builder {
+  --dnd-bg: light-dark(#fff, #1c1c1f);
+  --dnd-surface: light-dark(#f5f5f7, #26262a);
+  --dnd-text: light-dark(#1c1c1f, #f2f2f4);
+  --dnd-muted: light-dark(#5c5c66, #b0b0ba);
+  --dnd-border: light-dark(#8a8a94, #77777f);
+  --dnd-accent: light-dark(#3b4fc4, #a9b5ff);
+  --dnd-accent-text: light-dark(#fff, #14183a);
+  --dnd-danger: light-dark(#b3261e, #ffb4ab);
+  --dnd-radius: 8px;
+  --dnd-gap: 12px;
+
+  display: block;
+  container-type: inline-size;
+  color-scheme: light dark;
+  color: var(--dnd-text);
+  background: var(--dnd-bg);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: start;
+}
+.dnd-builder *, .dnd-builder *::before, .dnd-builder *::after { box-sizing: border-box; }
+.dnd-builder [hidden] { display: none !important; }
+.dnd-builder :focus-visible { outline: 2px solid var(--dnd-accent); outline-offset: 2px; }
+
+.dnd-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-block-end: var(--dnd-gap); }
+.dnd-toggle { display: inline-flex; gap: 4px; }
+.dnd-spacer { flex: 1; }
+.dnd-heading { font-size: 14px; font-weight: 600; margin: 0 0 var(--dnd-gap); }
+.dnd-muted { color: var(--dnd-muted); }
+
+.dnd-button {
+  min-height: 36px;
+  padding-inline: 12px;
+  color: var(--dnd-text);
+  background: var(--dnd-bg);
+  border: 1px solid var(--dnd-border);
+  border-radius: var(--dnd-radius);
+  font: inherit;
+  cursor: pointer;
+}
+.dnd-button:disabled { opacity: 0.55; cursor: default; }
+.dnd-button[aria-pressed='true'] { color: var(--dnd-accent-text); background: var(--dnd-accent); border-color: var(--dnd-accent); }
+.dnd-danger { color: var(--dnd-danger); border-color: var(--dnd-danger); }
+
+.dnd-panes { display: grid; grid-template-columns: 180px minmax(0, 1fr) 300px; gap: var(--dnd-gap); align-items: start; }
+.dnd-pane { padding: var(--dnd-gap); background: var(--dnd-surface); border-radius: var(--dnd-radius); }
+.dnd-settings-heading { display: flex; justify-content: space-between; align-items: start; }
+.dnd-close { display: none; }
+
+.dnd-palette-list { display: flex; flex-direction: column; gap: 6px; }
+.dnd-palette-item, .dnd-palette-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding-inline: 10px;
+  color: var(--dnd-text);
+  background: var(--dnd-bg);
+  border: 1px solid var(--dnd-border);
+  border-radius: var(--dnd-radius);
+  font: inherit;
+  text-align: start;
+  cursor: grab;
+}
+.dnd-icon { display: inline-flex; flex: none; }
+
+.dnd-list { display: flex; flex-direction: column; gap: 8px; min-height: 64px; }
+.dnd-group-body { display: block; margin-block-start: 8px; padding-inline-start: 20px; }
+.dnd-group-body .dnd-list { padding: 8px; border: 1px dashed var(--dnd-border); border-radius: var(--dnd-radius); }
+.dnd-empty { margin: 0; padding: 16px; color: var(--dnd-muted); text-align: center; }
+
+.dnd-card { padding: 6px; background: var(--dnd-bg); border: 1px solid var(--dnd-border); border-radius: var(--dnd-radius); }
+.dnd-selected { border-color: var(--dnd-accent); box-shadow: inset 0 0 0 1px var(--dnd-accent); }
+.dnd-card-row { position: relative; display: flex; align-items: center; gap: 4px; }
+.dnd-handle { display: inline-flex; padding: 8px 4px; color: var(--dnd-muted); cursor: grab; touch-action: none; }
+.dnd-card-main {
+  display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 8px;
+  min-width: 0; min-height: 36px; padding: 4px 6px;
+  color: inherit; background: none; border: 0; border-radius: 4px; font: inherit; text-align: start; cursor: pointer;
+}
+.dnd-card-label { overflow-wrap: anywhere; }
+.dnd-badge { padding: 0 6px; color: var(--dnd-muted); border: 1px solid var(--dnd-border); border-radius: 999px; font-size: 12px; }
+.dnd-badge-issue { color: var(--dnd-danger); border-color: var(--dnd-danger); }
+.dnd-icon-button { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 36px; height: 36px; color: inherit; background: none; border: 0; border-radius: 4px; cursor: pointer; }
+
+.dnd-menu {
+  position: absolute; inset-block-start: 100%; inset-inline-end: 0; z-index: 10;
+  min-width: 180px; padding: 4px;
+  background: var(--dnd-bg); border: 1px solid var(--dnd-border); border-radius: var(--dnd-radius);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+}
+.dnd-menu-item { padding: 8px 10px; border-radius: 4px; cursor: pointer; }
+.dnd-menu-item:hover, .dnd-menu-item:focus { color: var(--dnd-accent-text); background: var(--dnd-accent); outline: 0; }
+
+.dnd-label { display: block; margin-block: 8px 2px; font-weight: 500; }
+.dnd-check { display: flex; align-items: center; gap: 8px; min-height: 36px; margin-block-start: 8px; }
+.dnd-input {
+  width: 100%; min-height: 36px; padding: 6px 8px;
+  color: var(--dnd-text); background: var(--dnd-bg);
+  border: 1px solid var(--dnd-border); border-radius: 4px; font: inherit;
+}
+.dnd-conditions { margin: 16px 0 0; padding: 8px 10px 12px; border: 1px solid var(--dnd-border); border-radius: var(--dnd-radius); }
+.dnd-conditions legend { padding-inline: 4px; font-weight: 500; }
+.dnd-conditions > .dnd-button { margin-block-start: 8px; }
+.dnd-condition { margin-block-end: 8px; padding-block-end: 8px; border-block-end: 1px solid var(--dnd-border); }
+.dnd-condition .dnd-button { margin-block-start: 8px; }
+.dnd-advanced { margin-block-start: 16px; }
+.dnd-advanced summary { min-height: 24px; cursor: pointer; }
+.dnd-issues { margin: 0 0 8px; padding: 8px 8px 8px 24px; color: var(--dnd-danger); border: 1px solid var(--dnd-danger); border-radius: var(--dnd-radius); }
+p.dnd-issues { padding-inline-start: 8px; }
+.dnd-load-error { padding: 16px; color: var(--dnd-danger); border: 1px solid var(--dnd-danger); border-radius: var(--dnd-radius); }
+.dnd-code { display: block; margin: 0 0 8px; padding: 8px; overflow: auto; background: var(--dnd-surface); border-radius: 4px; font: 12px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
+.dnd-preview { max-width: 640px; }
+.dnd-preview .dnd-heading { margin-block-start: 16px; }
+.dnd-dialog { max-width: min(480px, calc(100vw - 32px)); color: var(--dnd-text); background: var(--dnd-bg); border: 1px solid var(--dnd-border); border-radius: var(--dnd-radius); }
+.dnd-dialog::backdrop { background: rgb(0 0 0 / 40%); }
+.dnd-dialog-actions { display: flex; justify-content: end; gap: 8px; }
+
+/* The palette keeps its slot while an item is dragged out. */
+.dnd-palette-placeholder { min-height: 40px; border: 2px dashed var(--dnd-border); border-radius: var(--dnd-radius); }
+.dnd-palette-preview { width: 156px; }
+/*
+ * A line that takes no space: the CDK caches where each list is when a drag starts, so a placeholder that
+ * pushes nested lists around would make it miss them. The negative margin cancels the list's gap.
+ */
+.dnd-placeholder, .dnd-list .dnd-palette-placeholder { position: relative; min-height: 0; height: 0; margin-block-end: -8px; border: 0; }
+.dnd-placeholder::before, .dnd-list .dnd-palette-placeholder::before { content: ''; position: absolute; inset: -2px 0 auto; height: 4px; background: var(--dnd-accent); border-radius: 2px; }
+.dnd-list.cdk-drop-list-dragging { outline: 2px solid var(--dnd-accent); outline-offset: 2px; border-radius: 4px; }
+.dnd-list.cdk-drop-list-dragging > .dnd-empty { color: var(--dnd-text); }
+/* The CDK's live announcer relies on this class, and nothing else loads it. */
+.cdk-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); border: 0; white-space: nowrap; }
+.cdk-drag-preview { box-shadow: 0 6px 20px rgb(0 0 0 / 30%); }
+.cdk-drag-animating, .dnd-list.cdk-drop-list-dragging .dnd-card:not(.cdk-drag-placeholder) { transition: transform 200ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .cdk-drag-animating, .dnd-list.cdk-drop-list-dragging .dnd-card:not(.cdk-drag-placeholder) { transition: none; }
+}
+
+@container (max-width: 760px) {
+  .dnd-panes { grid-template-columns: minmax(0, 1fr); }
+  .dnd-palette-list { flex-flow: row wrap; }
+  .dnd-palette-item { width: auto; }
+  .dnd-settings { display: none; }
+  .dnd-has-selection .dnd-settings {
+    display: block; position: fixed; inset: auto 0 0; z-index: 20; max-height: 70vh; overflow: auto;
+    border-block-start: 1px solid var(--dnd-border); border-radius: var(--dnd-radius) var(--dnd-radius) 0 0;
+  }
+  .dnd-close { display: inline-block; }
+}
