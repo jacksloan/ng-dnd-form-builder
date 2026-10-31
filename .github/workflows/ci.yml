@@ -40,7 +40,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx ng build demo --base-href=/ng-dnd-form-builder/
+      # A re-run keeps the run's earlier artifacts, so each attempt needs its own name.
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: dist/demo/browser
       - uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
